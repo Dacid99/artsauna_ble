@@ -1,0 +1,7 @@
+{
+  "name": "Artsauna BLE",
+  "content_in_root": false,
+  "domain": "artsauna_ble",
+  "type": "integration",
+  "render_readme": true
+}
