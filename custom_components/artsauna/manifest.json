@@ -1,0 +1,16 @@
+{
+  "domain": "sbv",
+  "name": "artsauna-bt",
+  "codeowners": [
+    "@sbv"
+  ],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://www.home-assistant.io/integrations/sbv",
+  "homekit": {},
+  "iot_class": "local_polling",
+  "quality_scale": "bronze",
+  "requirements": [],
+  "ssdp": [],
+  "zeroconf": []
+}
