@@ -7,6 +7,8 @@ UNIT_BYTE_POSITION = -4
 VOLUME_BYTE_POSITION = -3
 LIGHTING_BYTE_POSITION = -2
 CHECKSUM_BYTE_POSITION = -1
+CHECKSUM_BYTES_SLICE = slice(2, -1)
+FM_FREQUENCY_BYTES_SLICE = slice(-2, None)
 
 UNIT_BYTES_MAP = {0: "Celsius", 1: "Fahrenheit"}
 DEVICE_STATE_BYTES_MAP = {5: "OFF", 4: "ON", 0: "RADIO", 1: "AUX/BT", 3: "USB"}
@@ -31,7 +33,7 @@ RGB_LIGHTING_HEX_2_MAP = {
 
 
 def validate(data: bytes) -> bool:
-    return sum(data[3:-1]) % 256 == int(data[-1])
+    return sum(data[CHECKSUM_BYTES_SLICE]) % 256 == int(data[CHECKSUM_BYTE_POSITION])
 
 
 def target_temp(data: bytes) -> int:
@@ -68,3 +70,7 @@ def lighting(data: bytes) -> str:
 
 def volume(data: bytes) -> int:
     return int(data[VOLUME_BYTE_POSITION])
+
+
+def fm_frequency(data: bytes) -> float:
+    return int.from_bytes(data[FM_FREQUENCY_BYTES_SLICE]) / 100.0
