@@ -7,6 +7,11 @@ def data():
     return bytes.fromhex("ffaa0b5a470501103c41000b4892")
 
 
+@pytest.fixture
+def radio_data():
+    return bytes.fromhex("420203002706")
+
+
 def test_validate(data):
     assert sensor_data.validate(data)
 
@@ -45,3 +50,7 @@ def test_lighting(data):
 
 def test_heating_state(data):
     assert sensor_data.heating_state(data) == "ON"
+
+
+def test_fm_frequency(radio_data):
+    assert sensor_data.fm_frequency(radio_data) == 99.9
