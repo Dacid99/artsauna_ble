@@ -3,11 +3,21 @@ revision = 3
 requires-python = ">=3.14"
 
 [[package]]
+name = "aiooui"
+version = "0.1.9"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/14/b7/ad0f86010bbabc4e556e98dd2921a923677188223cc524432695966f14fa/aiooui-0.1.9.tar.gz", hash = "sha256:e8c8bc59ab352419e0747628b4cce7c4e04d492574c1971e223401126389c5d8", size = 369276, upload-time = "2025-01-19T00:12:44.853Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7c/fa/b1310457adbea7adb84d2c144159f3b41341c40c80df3c10ce6b266874b3/aiooui-0.1.9-py3-none-any.whl", hash = "sha256:737a5e62d8726540218c2b70e5f966d9912121e4644f3d490daf8f3c18b182e5", size = 367404, upload-time = "2025-01-19T00:12:42.57Z" },
+]
+
+[[package]]
 name = "artsauna"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "bleak" },
+    { name = "bleak-retry-connector" },
 ]
 
 [package.dev-dependencies]
@@ -16,7 +26,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "bleak", specifier = ">=2.0.0" }]
+requires-dist = [
+    { name = "bleak", specifier = ">=2.0.0" },
+    { name = "bleak-retry-connector", specifier = ">=4.4.4" },
+]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=9.0.2" }]
@@ -43,6 +56,36 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ce/cb/20f3dd0498a820278c7078dce786676d18342721a3723591d5853323b363/bleak-2.0.0.tar.gz", hash = "sha256:a8043fc0f3af1a00a84963824195463ca39789ae4f6804d3d7b1423e6083254a", size = 119177, upload-time = "2025-11-22T18:21:52.644Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2b/52/43ac69d8a1e7e9aa20205ad0e106a08b3b4f8199def3f4e3e43c1439bc0b/bleak-2.0.0-py3-none-any.whl", hash = "sha256:a4ee68ab98b0d39eb3b2a937b2f95b93123258f301b0d0087edc4529809c77b1", size = 139953, upload-time = "2025-11-22T18:21:51.487Z" },
+]
+
+[[package]]
+name = "bleak-retry-connector"
+version = "4.4.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "bleak" },
+    { name = "bluetooth-adapters", marker = "sys_platform == 'linux'" },
+    { name = "dbus-fast", marker = "sys_platform == 'linux'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8c/41/384b005fcb7afccb9c02c50da2a4154033286927d38023219b70f5f09d8d/bleak_retry_connector-4.4.4.tar.gz", hash = "sha256:6716c159db3fc0a4a454fc325521d5cdf398594310238ce93b9f534c8608c36c", size = 18637, upload-time = "2025-11-12T18:16:40.264Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/11/e5/caf6e1239967bb31edf97378a721113192e531e3d82e0441603ef2c9cf44/bleak_retry_connector-4.4.4-py3-none-any.whl", hash = "sha256:851c8a1c69821d89edc80f0e93278866e8cebc9c6a9d3aa683f454f9cbe8010a", size = 18620, upload-time = "2025-11-12T18:16:38.697Z" },
+]
+
+[[package]]
+name = "bluetooth-adapters"
+version = "2.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiooui" },
+    { name = "bleak" },
+    { name = "dbus-fast", marker = "sys_platform == 'linux'" },
+    { name = "uart-devices" },
+    { name = "usb-devices" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/06/8a/b37a52f5243cf8bd30cc7e25c1128750d129db15a7b2c7ef107ddb7429f9/bluetooth_adapters-2.1.1.tar.gz", hash = "sha256:f289e0f08814f74252a28862f488283680584744430d7eac45820f9c20ba041a", size = 17234, upload-time = "2025-09-12T17:18:48.906Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/37/11/8f344d5379df2d31eea73052128136702630f28b5fb55a8d30250c8112e2/bluetooth_adapters-2.1.1-py3-none-any.whl", hash = "sha256:1f93026e530dcb2f4515a92955fa6f85934f928b009a181ee57edc8b4affd25c", size = 20276, upload-time = "2025-09-12T17:18:47.763Z" },
 ]
 
 [[package]]
@@ -180,6 +223,24 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/72/94/1a15dd82efb362ac84269196e94cf00f187f7ed21c242792a923cdb1c61f/typing_extensions-4.15.0.tar.gz", hash = "sha256:0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466", size = 109391, upload-time = "2025-08-25T13:49:26.313Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl", hash = "sha256:f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548", size = 44614, upload-time = "2025-08-25T13:49:24.86Z" },
+]
+
+[[package]]
+name = "uart-devices"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/dd/08/a8fd6b3dd2cb92344fb4239d4e81ee121767430d7ce71f3f41282f7334e0/uart_devices-0.1.1.tar.gz", hash = "sha256:3a52c4ae0f5f7400ebe1ae5f6e2a2d40cc0b7f18a50e895236535c4e53c6ed34", size = 5167, upload-time = "2025-02-22T16:47:05.609Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/12/64/edf33c2d7fba7d6bf057c9dc4235bfc699517ea4c996240a1a9c2bf51c29/uart_devices-0.1.1-py3-none-any.whl", hash = "sha256:55bc8cce66465e90b298f0910e5c496bc7be021341c5455954cf61c6253dc123", size = 4827, upload-time = "2025-02-22T16:47:04.286Z" },
+]
+
+[[package]]
+name = "usb-devices"
+version = "0.4.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/25/48/dbe6c4c559950ebebd413e8c40a8a60bfd47ddd79cb61b598a5987e03aad/usb_devices-0.4.5.tar.gz", hash = "sha256:9b5c7606df2bc791c6c45b7f76244a0cbed83cb6fa4c68791a143c03345e195d", size = 5421, upload-time = "2023-12-16T19:59:53.295Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e1/c9/26171ae5b78d72dd006bbc51ca9baa2cbb889ae8e91608910207482108fd/usb_devices-0.4.5-py3-none-any.whl", hash = "sha256:8a415219ef1395e25aa0bddcad484c88edf9673acdeae8a07223ca7222a01dcf", size = 5349, upload-time = "2023-12-16T19:59:51.604Z" },
 ]
 
 [[package]]
