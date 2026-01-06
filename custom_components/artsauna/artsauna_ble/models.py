@@ -40,5 +40,4 @@ class ArtsaunaState:
     rgb: int = 0
     fm_frequency: int = 0
     unit_is_celsius: bool = True
-
-    def update_from_data(self, data: bytes) -> None:
+    audio_input: str = "off"

@@ -15,8 +15,10 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
-
+import enum
 from uuid import UUID
+
+from bidict import bidict
 
 CHARACTERISTIC_WRITE = UUID("0000ae01-0000-1000-8000-00805f9b34fb")
 CHARACTERISTIC_NOTIFY = UUID("0000ae03-0000-1000-8000-00805f9b34fb")
@@ -78,14 +80,17 @@ LIGHTING_HEX_1_MAP = {
     2: "Internal",
     3: "External & Internal",
 }
-EXTERNAL_RGB_COLOR_MAP = {
-    1: "White",
-    2: "Green",
-    3: "Red",
-    4: "Blue",
-    5: "Yellow",
-    6: "Cyan",
-    7: "Pink",
-    8: "OFF",
-    9: "Rainbow",
-}
+
+EXTERNAL_RGB_COLOR_MAP = bidict(
+    {
+        "White": 1,
+        "Green": 2,
+        "Red": 3,
+        "Blue": 4,
+        "Yellow": 5,
+        "Cyan": 6,
+        "Pink": 7,
+        "OFF": 8,
+        "Rainbow": 9,
+    }
+)

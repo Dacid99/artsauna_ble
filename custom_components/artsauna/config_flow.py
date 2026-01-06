@@ -24,6 +24,7 @@ import logging
 from typing import Any
 
 import voluptuous as vol
+from bleak_retry_connector import BLEAK_EXCEPTIONS
 from bluetooth_data_tools import human_readable_name
 from homeassistant import config_entries
 from homeassistant.components.bluetooth import (

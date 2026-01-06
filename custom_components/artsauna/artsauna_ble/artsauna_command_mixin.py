@@ -30,16 +30,16 @@ class ArtsaunaBLECommandMixin:
     async def send_toggle_heating(self):
         return await self._send_command(CMD_TOGGLE_HEATING)
 
-    async def send_toggle_temp_up(self):
+    async def send_temp_up(self):
         return await self._send_command(CMD_TEMP_UP)
 
-    async def send_toggle_temp_down(self):
+    async def send_temp_down(self):
         return await self._send_command(CMD_TEMP_DOWN)
 
-    async def send_toggle_time_up(self):
+    async def send_time_up(self):
         return await self._send_command(CMD_TIME_UP)
 
-    async def send_toggle_time_down(self):
+    async def send_time_down(self):
         return await self._send_command(CMD_TIME_DOWN)
 
     async def send_toggle_internal_light(self):

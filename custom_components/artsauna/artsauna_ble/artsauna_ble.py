@@ -25,24 +25,27 @@ from collections.abc import Callable
 from artsauna_ble_device_mixin import ArtsaunaBLEDeviceMixin
 from artsauna_state_mixin import ArtsaunaStateMixin
 from bleak.backends.device import BLEDevice
+from bleak.exc import BleakDBusError, BleakError
 from bleak_retry_connector import (
     BLEAK_RETRY_EXCEPTIONS,
     BleakClientWithServiceCache,
-    BleakDBusError,
-    BleakError,
     BleakNotFoundError,
     establish_connection,
     retry_bluetooth_connection_error,
 )
-from const import CHARACTERISTIC_NOTIFY, CHARACTERISTIC_WRITE, CMD_APP_AUTH
+from const import CHARACTERISTIC_NOTIFY, CHARACTERISTIC_WRITE
 from models import ArtsaunaState
+
+from custom_components.artsauna.artsauna_ble.artsauna_command_mixin import (
+    ArtsaunaBLECommandMixin,
+)
 
 _LOGGER = logging.getLogger(__name__)
 DEFAULT_ATTEMPTS = sys.maxsize
 BLEAK_BACKOFF_TIME = 0.25
 
 
-class ArtsaunaBLE(ArtsaunaStateMixin, ArtsaunaBLEDeviceMixin):
+class ArtsaunaBLE(ArtsaunaStateMixin, ArtsaunaBLEDeviceMixin, ArtsaunaBLECommandMixin):
     def __init__(self, ble_device: BLEDevice) -> None:
         self._ble_device = ble_device
         self._state = ArtsaunaState()
@@ -56,7 +59,7 @@ class ArtsaunaBLE(ArtsaunaStateMixin, ArtsaunaBLEDeviceMixin):
 
     async def initialise(self) -> None:
         _LOGGER.debug("Sending configuration commands")
-        await self._send_command(CMD_APP_AUTH)
+        await self.send_auth()
         await asyncio.sleep(0.1)
 
         _LOGGER.debug("%s: Subscribe to notifications", self.name)
@@ -146,7 +149,7 @@ class ArtsaunaBLE(ArtsaunaStateMixin, ArtsaunaBLEDeviceMixin):
         asyncio.create_task(self._execute_timed_disconnect())
 
     async def stop(self) -> None:
-        """Stop the LD2410BLE."""
+        """Stop the Artsauna integration."""
         _LOGGER.debug("%s: Stop", self.name)
         await self._execute_disconnect()
 

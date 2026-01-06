@@ -7,8 +7,10 @@ license-files = ["LICENSE"]
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "bidict>=0.23.1",
     "bleak>=2.0.0",
     "bleak-retry-connector>=4.4.4",
+    "homeassistant>=2025.12.5",
 ]
 
 [dependency-groups]
