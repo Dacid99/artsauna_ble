@@ -2,7 +2,7 @@
 
 import logging
 
-from artsauna_ble.const import EXTERNAL_RGB_COLOR_MAP
+from artsauna_ble.const import INTERNAL_RGB_COLOR_MAP
 from homeassistant.components.select import SelectEntity, SelectEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
@@ -21,7 +21,7 @@ _LOGGER = logging.getLogger(__name__)
 RGB_SELECT_DESCRIPTION = SelectEntityDescription(
     key="rgb",
     translation_key="rgb",
-    options=list(EXTERNAL_RGB_COLOR_MAP.keys()),
+    options=list(INTERNAL_RGB_COLOR_MAP.keys()),
     entity_category=EntityCategory.CONFIG,
 )
 
@@ -73,14 +73,14 @@ class ArtsaunaBLESelect(CoordinatorEntity[ArtsaunaBLECoordinator], SelectEntity)
             model="Artsauna",
             sw_version=getattr(self._device, "fw_ver"),
         )
-        self._attr_current_option = EXTERNAL_RGB_COLOR_MAP.inverse[0]
+        self._attr_current_option = INTERNAL_RGB_COLOR_MAP.inverse[0]
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         match self._key:
             case "rgb":
-                self._attr_current_option = EXTERNAL_RGB_COLOR_MAP.inverse[
+                self._attr_current_option = INTERNAL_RGB_COLOR_MAP.inverse[
                     self._device.rgb_mode
                 ]
         self.async_write_ha_state()
@@ -91,4 +91,4 @@ class ArtsaunaBLESelect(CoordinatorEntity[ArtsaunaBLECoordinator], SelectEntity)
         return self._coordinator.connected and super().available
 
     async def async_select_option(self, option: str) -> None:
-        await self._device.send_set_rgb(EXTERNAL_RGB_COLOR_MAP[option])
+        await self._device.send_set_rgb(INTERNAL_RGB_COLOR_MAP[option])

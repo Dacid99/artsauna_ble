@@ -26,7 +26,7 @@ class ArtsaunaStateMixin:
 
     @property
     def rgb_mode(self) -> int:
-        return (self._state.rgb + 2) % 9
+        return self._state.rgb
 
     @property
     def volume(self) -> int:
@@ -41,53 +41,53 @@ class ArtsaunaStateMixin:
         return self._state.current_temp
 
     @property
-    def external_lighting_on(self) -> bool:
-        return self._state.lighting % 2 == 1
+    def is_external_light_on(self) -> bool:
+        return self._state.light % 2 == 1
 
     @property
-    def internal_lighting_on(self) -> bool:
-        return self._state.lighting % 2 == 0 and self._state.lighting != 0
+    def is_internal_light_on(self) -> bool:
+        return self._state.light > 2
 
     @property
-    def rgb_on(self) -> bool:
+    def is_rgb_on(self) -> bool:
         return self._state.rgb != 6
 
     @property
-    def lighting_on(self) -> bool:
-        return self.external_lighting_on or self.internal_lighting_on or self.rgb_on
+    def is_light_on(self) -> bool:
+        return self.is_external_light_on or self.is_internal_light_on or self.is_rgb_on
 
     @property
     def fm_frequency(self) -> float:
         return self._state.fm_frequency / 100.0
 
     @property
-    def power_on(self) -> bool:
-        return self._state.power_on
+    def is_power_on(self) -> bool:
+        return self._state.state != 4
 
     @property
-    def heating_on(self) -> bool:
-        return self._state.heating_on == 1
+    def is_heating_on(self) -> bool:
+        return self._state.heating_state == 1
 
     @property
     def remaining_time(self) -> int:
         return self._state.remaining_time
 
     @property
-    def unit_is_celsius(self) -> bool:
-        return self._state.unit_is_celsius
+    def is_unit_celsius(self) -> bool:
+        return self._state.unit_is_celsius == 0
 
     @property
-    def aux_is_on(self) -> bool:
-        return self._state.audio_input == "aux"
+    def is_aux_on(self) -> bool:
+        return self._state.state == 2
 
     @property
-    def fm_is_on(self) -> bool:
-        return self._state.audio_input == "fm"
+    def is_fm_on(self) -> bool:
+        return self._state.state == 0
 
     @property
-    def usb_is_on(self) -> bool:
-        return self._state.audio_input == "usb"
+    def is_usb_on(self) -> bool:
+        return self._state.state == 3
 
     @property
-    def bt_is_on(self) -> bool:
-        return self._state.audio_input == "bt"
+    def is_bt_on(self) -> bool:
+        return self._state.state == 1

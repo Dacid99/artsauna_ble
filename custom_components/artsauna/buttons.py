@@ -106,7 +106,7 @@ class ArtsaunaBLEButton(CoordinatorEntity[ArtsaunaBLECoordinator], ButtonEntity)
         super().available
         if self._key == "search_fm":
             return (
-                self._device.fm_is_on
+                self._device.is_fm_on
                 and self._coordinator.connected
                 and super().available
             )

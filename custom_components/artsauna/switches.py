@@ -152,15 +152,15 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
             case "internal_light":
                 return self._device.internal_lighting_on
             case "aux":
-                return self._device.aux_is_on
+                return self._device.is_aux_on
             case "usb":
-                return self._device.usb_is_on
+                return self._device.is_usb_on
             case "bt":
-                return self._device.bt_is_on
+                return self._device.is_bt_on
             case "fm":
-                return self._device.fm_is_on
+                return self._device.is_fm_on
             case "unit":
-                return self._device.unit_is_celsius
+                return self._device.is_unit_celsius
             case _:
                 _LOGGER.error("Wrong KEY for switch: %s", self._key)
                 return False

@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
-import enum
+
 from uuid import UUID
 
 from bidict import bidict
@@ -71,6 +71,12 @@ CHECKSUM_BYTE_POSITION = -1
 CHECKSUM_BYTES_SLICE = slice(-13, -1)
 FM_FREQUENCY_BYTES_SLICE = slice(-2, None)
 
+STATE_NOTIFICATION_START = b"\xff\xaa"
+FM_NOTIFICATION_START = b"B\x02\x03\x00"
+
+STATE_NOTIFICATION_REGEX = STATE_NOTIFICATION_START + b".{12}"
+FM_NOTIFICATION_REGEX = FM_NOTIFICATION_START + b".{2}"
+
 UNIT_BYTES_MAP = {0: "Celsius", 1: "Fahrenheit"}
 DEVICE_STATE_BYTES_MAP = {5: "OFF", 4: "ON", 0: "RADIO", 1: "AUX/BT", 3: "USB"}
 HEATING_BYTES_MAP = {0: "No Info", 1: "ON", 2: "OFF"}
@@ -81,16 +87,16 @@ LIGHTING_HEX_1_MAP = {
     3: "External & Internal",
 }
 
-EXTERNAL_RGB_COLOR_MAP = bidict(
+INTERNAL_RGB_COLOR_MAP = bidict(
     {
-        "White": 1,
-        "Green": 2,
-        "Red": 3,
-        "Blue": 4,
-        "Yellow": 5,
-        "Cyan": 6,
-        "Pink": 7,
-        "OFF": 8,
-        "Rainbow": 9,
+        "LED01: White": 8,
+        "LED02: Green": 0,
+        "LED03: Red": 1,
+        "LED04: Blue": 2,
+        "LED05: Yellow": 3,
+        "LED06: Cyan": 4,
+        "LED07: Pink": 5,
+        "LED08: OFF": 6,
+        "LED09: Rainbow": 7,
     }
 )

@@ -22,6 +22,7 @@ import re
 import sys
 from collections.abc import Callable
 
+import utils
 from artsauna_ble_device_mixin import ArtsaunaBLEDeviceMixin
 from artsauna_state_mixin import ArtsaunaStateMixin
 from bleak.backends.device import BLEDevice
@@ -33,7 +34,12 @@ from bleak_retry_connector import (
     establish_connection,
     retry_bluetooth_connection_error,
 )
-from const import CHARACTERISTIC_NOTIFY, CHARACTERISTIC_WRITE
+from const import (
+    CHARACTERISTIC_NOTIFY,
+    CHARACTERISTIC_WRITE,
+    FM_NOTIFICATION_REGEX,
+    STATE_NOTIFICATION_REGEX,
+)
 from models import ArtsaunaState
 
 from custom_components.artsauna.artsauna_ble.artsauna_command_mixin import (
@@ -73,17 +79,27 @@ class ArtsaunaBLE(ArtsaunaStateMixin, ArtsaunaBLEDeviceMixin, ArtsaunaBLECommand
         _LOGGER.debug("%s: Notification received: %s", self.name, data.hex())
 
         self._notification_buffer += data
-        msg = re.search(frame_regex, self._notification_buffer)
+        msg = re.search(STATE_NOTIFICATION_REGEX, self._notification_buffer)
         if msg:
             self._notification_buffer = self._notification_buffer[msg.end() :]  # noqa: E203
-            target_state = msg.group("target_state")
-            engineering_data = msg.group("engineering_data")
 
-            # process data form buffer to State
-            #
-            self._state.update_from_data(data)
+            data = bytearray(msg.group())
+            if ArtsaunaState.validate_ble_state_data(data):
+                new_state = ArtsaunaState.from_ble_state_data(data)
+                new_state.fm_frequency = self._state.fm_frequency
+                self._state = new_state
 
-            self._fire_callbacks()
+                self._fire_callbacks()
+
+        else:
+            msg = re.search(FM_NOTIFICATION_REGEX, self._notification_buffer)
+            if msg:
+                self._notification_buffer = self._notification_buffer[msg.end() :]  # noqa: E203
+
+                data = bytearray(msg.group())
+                self._state = ArtsaunaState.from_ble_state_data(data)
+
+                self._fire_callbacks()
 
         _LOGGER.debug(
             "%s: Notification received: %s %s",
