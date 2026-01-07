@@ -22,10 +22,10 @@ import re
 import sys
 from collections.abc import Callable
 
-import utils
 from artsauna_ble_device_mixin import ArtsaunaBLEDeviceMixin
 from artsauna_state_mixin import ArtsaunaStateMixin
 from bleak.backends.device import BLEDevice
+from bleak.backends.scanner import AdvertisementData
 from bleak.exc import BleakDBusError, BleakError
 from bleak_retry_connector import (
     BLEAK_RETRY_EXCEPTIONS,
@@ -74,6 +74,13 @@ class ArtsaunaBLE(ArtsaunaStateMixin, ArtsaunaBLEDeviceMixin, ArtsaunaBLECommand
                 CHARACTERISTIC_NOTIFY, self._notification_handler
             )
 
+    def set_ble_device_and_advertisement_data(
+        self, ble_device: BLEDevice, advertisement_data: AdvertisementData
+    ) -> None:
+        """Set the ble device."""
+        self._ble_device = ble_device
+        self._advertisement_data = advertisement_data
+
     def _notification_handler(self, _sender: int, data: bytearray) -> None:
         """Handle notification responses."""
         _LOGGER.debug("%s: Notification received: %s", self.name, data.hex())
@@ -84,7 +91,7 @@ class ArtsaunaBLE(ArtsaunaStateMixin, ArtsaunaBLEDeviceMixin, ArtsaunaBLECommand
             self._notification_buffer = self._notification_buffer[msg.end() :]  # noqa: E203
 
             data = bytearray(msg.group())
-            if ArtsaunaState.validate_ble_state_data(data):
+            if ArtsaunaState.validate_ble_data(data):
                 new_state = ArtsaunaState.from_ble_state_data(data)
                 new_state.fm_frequency = self._state.fm_frequency
                 self._state = new_state

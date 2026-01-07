@@ -40,7 +40,6 @@ from .models import ArtsaunaBLEData
 PLATFORMS: list[Platform] = [
     Platform.SENSOR,
     Platform.SWITCH,
-    Platform.BINARY_SENSOR,
     Platform.SELECT,
     Platform.BUTTON,
     Platform.NUMBER,
