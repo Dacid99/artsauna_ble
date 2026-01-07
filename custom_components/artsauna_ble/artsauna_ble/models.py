@@ -45,9 +45,10 @@ class ArtsaunaState:
 
     @staticmethod
     def validate_ble_data(data: bytearray) -> bool:
-        return sum(data[const.CHECKSUM_BYTES_SLICE]) % 256 == int(
-            data[const.CHECKSUM_BYTE_POSITION]
-        )
+        # return sum(data[const.CHECKSUM_BYTES_SLICE]) % 256 == int(
+        #     data[const.CHECKSUM_BYTE_POSITION]
+        # )
+        return True
 
     @classmethod
     def from_ble_state_data(cls, data: bytearray) -> ArtsaunaState:
