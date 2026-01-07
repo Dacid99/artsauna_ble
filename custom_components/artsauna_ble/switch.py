@@ -147,13 +147,13 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
         """Handle updated data from the coordinator."""
         match self._key:
             case "power":
-                self._attr_native_value = self._device.power_on
+                self._attr_native_value = self._device.is_power_on
             case "heating":
-                self._attr_native_value = self._device.heating_on
+                self._attr_native_value = self._device.is_heating_on
             case "external_light":
-                self._attr_native_value = self._device.external_lighting_on
+                self._attr_native_value = self._device.is_external_light_on
             case "internal_light":
-                self._attr_native_value = self._device.internal_lighting_on
+                self._attr_native_value = self._device.is_internal_light_on
             case "aux":
                 self._attr_native_value = self._device.is_aux_on
             case "usb":

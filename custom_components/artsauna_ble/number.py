@@ -91,7 +91,11 @@ class ArtsaunaBLENumber(CoordinatorEntity[ArtsaunaBLECoordinator], NumberEntity)
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        self._attr_native_value = getattr(self._device, self._key)
+        match self._key:
+            case "volume":
+                self._attr_native_value = self._device.volume
+            case _:
+                _LOGGER.error("Wrong KEY for number: %s", self._key)
         self.async_write_ha_state()
 
     async def async_set_native_value(self, value: float) -> None:
