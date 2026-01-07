@@ -2,7 +2,6 @@
 
 import logging
 
-from coordinator import ArtsaunaBLECoordinator
 from homeassistant.components.button import (
     ButtonDeviceClass,
     ButtonEntity,
@@ -18,6 +17,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import DOMAIN
+from .coordinator import ArtsaunaBLECoordinator
 from .models import ArtsaunaBLEData
 
 _LOGGER = logging.getLogger(__name__)

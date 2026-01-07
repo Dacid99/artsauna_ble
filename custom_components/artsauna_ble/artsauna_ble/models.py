@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import const
+from . import const
 
 
 @dataclass

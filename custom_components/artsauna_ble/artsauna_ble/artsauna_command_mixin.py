@@ -1,9 +1,6 @@
-from artsauna_ble import utils
-from artsauna_ble.const import (
+from . import utils
+from .const import (
     CMD_APP_AUTH,
-    CMD_RGB_1,
-    CMD_RGB_2,
-    CMD_RGB_3,
     CMD_TEMP_DOWN,
     CMD_TEMP_UP,
     CMD_TIME_DOWN,
