@@ -140,30 +140,30 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
             manufacturer="HiMaterial",
             model="Artsauna",
         )
-        self._attr_native_value = False
+        self._attr_is_on = False
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         match self._key:
             case "power":
-                self._attr_native_value = self._device.is_power_on
+                self._attr_is_on = self._device.is_power_on
             case "heating":
-                self._attr_native_value = self._device.is_heating_on
+                self._attr_is_on = self._device.is_heating_on
             case "external_light":
-                self._attr_native_value = self._device.is_external_light_on
+                self._attr_is_on = self._device.is_external_light_on
             case "internal_light":
-                self._attr_native_value = self._device.is_internal_light_on
+                self._attr_is_on = self._device.is_internal_light_on
             case "aux":
-                self._attr_native_value = self._device.is_aux_on
+                self._attr_is_on = self._device.is_aux_on
             case "usb":
-                self._attr_native_value = self._device.is_usb_on
+                self._attr_is_on = self._device.is_usb_on
             case "bt":
-                self._attr_native_value = self._device.is_bt_on
+                self._attr_is_on = self._device.is_bt_on
             case "fm":
-                self._attr_native_value = self._device.is_fm_on
+                self._attr_is_on = self._device.is_fm_on
             case "unit":
-                self._attr_native_value = self._device.is_unit_celsius
+                self._attr_is_on = self._device.is_unit_celsius
             case _:
                 _LOGGER.error("Wrong KEY for switch: %s", self._key)
 
@@ -171,7 +171,7 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
 
     @cached_property
     def is_on(self) -> bool:
-        return bool(self._attr_native_value)
+        return bool(self._attr_is_on)
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         match self._key:

@@ -62,7 +62,7 @@ class ArtsaunaStateMixin:
 
     @property
     def is_power_on(self) -> bool:
-        return self._state.state != 4
+        return self._state.state != 5
 
     @property
     def is_heating_on(self) -> bool:
