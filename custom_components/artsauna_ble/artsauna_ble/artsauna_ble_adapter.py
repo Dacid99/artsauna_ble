@@ -66,15 +66,21 @@ class ArtsaunaBLEAdapter(
         self._expected_disconnect = False
 
     async def initialise(self) -> None:
-        _LOGGER.debug("Sending configuration commands")
-        await self.send_auth()
-        await asyncio.sleep(0.1)
+        await self._ensure_connected()
 
         _LOGGER.debug("%s: Subscribe to notifications", self.name)
         if self._client is not None:
+            _LOGGER.debug(self._client)
+
+            _LOGGER.debug("Sending auth commands")
+            await self.send_auth()
+            await asyncio.sleep(0.1)
+
             await self._client.start_notify(
                 CHARACTERISTIC_NOTIFY, self._notification_handler
             )
+        else:
+            _LOGGER.debug("Client is unexpectedly None")
 
     def set_ble_device_and_advertisement_data(
         self, ble_device: BLEDevice, advertisement_data: AdvertisementData
