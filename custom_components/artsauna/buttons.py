@@ -1,7 +1,6 @@
 """LD2450 BLE integration sensor platform."""
 
 import logging
-from functools import cached_property
 
 from homeassistant.components.button import (
     ButtonDeviceClass,
@@ -9,7 +8,7 @@ from homeassistant.components.button import (
     ButtonEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import EntityCategory
+from homeassistant.const import EntityCategory, UnitOfTemperature, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry
 from homeassistant.helpers.device_registry import DeviceInfo
@@ -26,18 +25,18 @@ _LOGGER = logging.getLogger(__name__)
 TEMP_UP_DESCRIPTION = ButtonEntityDescription(
     key="temp_up",
     translation_key="temp_up",
+    unit_of_measurement=UnitOfTemperature.CELSIUS,
 )
 TEMP_DOWN_DESCRIPTION = ButtonEntityDescription(
     key="temp_down",
     translation_key="temp_down",
+    unit_of_measurement=UnitOfTemperature.CELSIUS,
 )
 TIME_UP_DESCRIPTION = ButtonEntityDescription(
-    key="time_up",
-    translation_key="time_up",
+    key="time_up", translation_key="time_up", unit_of_measurement=UnitOfTime.MINUTES
 )
 TIME_DOWN_DESCRIPTION = ButtonEntityDescription(
-    key="time_down",
-    translation_key="time_down",
+    key="time_down", translation_key="time_down", unit_of_measurement=UnitOfTime.MINUTES
 )
 SEARCH_FM_DESCRIPTION = ButtonEntityDescription(
     key="search_fm",
@@ -103,7 +102,6 @@ class ArtsaunaBLEButton(CoordinatorEntity[ArtsaunaBLECoordinator], ButtonEntity)
     @property
     def available(self) -> bool:
         """Unavailable if coordinator isn't connected."""
-        super().available
         if self._key == "search_fm":
             return (
                 self._device.is_fm_on
