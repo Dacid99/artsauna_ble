@@ -93,11 +93,6 @@ class ArtsaunaBLENumber(CoordinatorEntity[ArtsaunaBLECoordinator], NumberEntity)
         self._attr_native_value = getattr(self._device, self._key)
         self.async_write_ha_state()
 
-    @property
-    def available(self) -> bool:
-        """Unavailable if coordinator isn't connected."""
-        return self._coordinator.connected and super().available
-
     async def async_set_native_value(self, value: float) -> None:
         """Update the current value."""
         match self._key:

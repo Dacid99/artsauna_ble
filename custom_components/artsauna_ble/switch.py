@@ -165,11 +165,6 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
 
         self.async_write_ha_state()
 
-    @property
-    def available(self) -> bool:
-        """Unavailable if coordinator isn't connected."""
-        return self._coordinator.connected and super().available
-
     @cached_property
     def is_on(self) -> bool:
         return bool(self._attr_native_value)

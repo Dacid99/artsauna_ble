@@ -86,10 +86,5 @@ class ArtsaunaBLESelect(CoordinatorEntity[ArtsaunaBLECoordinator], SelectEntity)
                 ]
         self.async_write_ha_state()
 
-    @property
-    def available(self) -> bool:
-        """Unavailable if coordinator isn't connected."""
-        return self._coordinator.connected and super().available
-
     async def async_select_option(self, option: str) -> None:
         await self._device.send_set_rgb(INTERNAL_RGB_COLOR_MAP[option])

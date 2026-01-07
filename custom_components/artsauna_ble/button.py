@@ -108,17 +108,6 @@ class ArtsaunaBLEButton(CoordinatorEntity[ArtsaunaBLECoordinator], ButtonEntity)
             model="ArtsaunaBLE",
         )
 
-    @property
-    def available(self) -> bool:
-        """Unavailable if coordinator isn't connected."""
-        if self._key == "search_fm":
-            return (
-                self._device.is_fm_on
-                and self._coordinator.connected
-                and super().available
-            )
-        return self._coordinator.connected and super().available
-
     async def async_press(self) -> None:
         """Handle the button press."""
         match self._key:

@@ -115,11 +115,6 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
             model="ArtsaunaBLE",
         )
 
-    @property
-    def available(self) -> bool:
-        """Unavailable if coordinator isn't connected."""
-        return self._coordinator.connected and super().available
-
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
