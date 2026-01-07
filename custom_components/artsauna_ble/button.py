@@ -25,31 +25,36 @@ _LOGGER = logging.getLogger(__name__)
 
 TEMP_UP_DESCRIPTION = ButtonEntityDescription(
     key="temp_up",
-    translation_key="temp_up",
     name="Temp +",
+    icon="mdi:thermometer_add",
+    translation_key="temp_up",
     unit_of_measurement=UnitOfTemperature.CELSIUS,
 )
 TEMP_DOWN_DESCRIPTION = ButtonEntityDescription(
     key="temp_down",
     name="Temp -",
+    icon="mdi:thermometer_minus",
     translation_key="temp_down",
     unit_of_measurement=UnitOfTemperature.CELSIUS,
 )
 TIME_UP_DESCRIPTION = ButtonEntityDescription(
     key="time_up",
     name="TIME +",
+    icon="mdi:timer_arrow_up",
     translation_key="time_up",
     unit_of_measurement=UnitOfTime.MINUTES,
 )
 TIME_DOWN_DESCRIPTION = ButtonEntityDescription(
     key="time_down",
     name="TIME -",
+    icon="mdi:timer_arrow_down",
     translation_key="time_down",
     unit_of_measurement=UnitOfTime.MINUTES,
 )
 SEARCH_FM_DESCRIPTION = ButtonEntityDescription(
     key="search_fm",
     name="Search Radiostations",
+    icon="mdi:radio",
     translation_key="search_fm",
 )
 

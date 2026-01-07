@@ -28,12 +28,14 @@ _LOGGER = logging.getLogger(__name__)
 POWER_DESCRIPTION = SwitchEntityDescription(
     key="power",
     name="Power",
+    icon="mdi:power_settings_new",
     translation_key="power",
 )
 
 HEATING_DESCRIPTION = SwitchEntityDescription(
     key="heating",
     name="Heating",
+    icon="mdi:heat",
     translation_key="heating",
 )
 
@@ -58,6 +60,7 @@ AUX_DESCRIPTION = SwitchEntityDescription(
 FM_DESCRIPTION = SwitchEntityDescription(
     key="fm",
     name="Radio Mode",
+    icon="mdi:radio",
     translation_key="fm",
 )
 
@@ -70,6 +73,7 @@ USB_DESCRIPTION = SwitchEntityDescription(
 BT_DESCRIPTION = SwitchEntityDescription(
     key="bt",
     name="BT Mode",
+    icon="mdi:bluetooth",
     translation_key="bluetooth",
 )
 UNIT_DESCRIPTION = SwitchEntityDescription(

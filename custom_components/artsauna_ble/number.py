@@ -26,6 +26,7 @@ _LOGGER = logging.getLogger(__name__)
 VOLUME_DESCRIPTION = NumberEntityDescription(
     key="volume",
     name="Volume",
+    icon="mdi:volume_up",
     translation_key="volume",
     entity_category=EntityCategory.CONFIG,
     device_class=NumberDeviceClass.SOUND_PRESSURE,
