@@ -26,21 +26,30 @@ _LOGGER = logging.getLogger(__name__)
 TEMP_UP_DESCRIPTION = ButtonEntityDescription(
     key="temp_up",
     translation_key="temp_up",
+    name="Temp +",
     unit_of_measurement=UnitOfTemperature.CELSIUS,
 )
 TEMP_DOWN_DESCRIPTION = ButtonEntityDescription(
     key="temp_down",
+    name="Temp -",
     translation_key="temp_down",
     unit_of_measurement=UnitOfTemperature.CELSIUS,
 )
 TIME_UP_DESCRIPTION = ButtonEntityDescription(
-    key="time_up", translation_key="time_up", unit_of_measurement=UnitOfTime.MINUTES
+    key="time_up",
+    name="TIME +",
+    translation_key="time_up",
+    unit_of_measurement=UnitOfTime.MINUTES,
 )
 TIME_DOWN_DESCRIPTION = ButtonEntityDescription(
-    key="time_down", translation_key="time_down", unit_of_measurement=UnitOfTime.MINUTES
+    key="time_down",
+    name="TIME -",
+    translation_key="time_down",
+    unit_of_measurement=UnitOfTime.MINUTES,
 )
 SEARCH_FM_DESCRIPTION = ButtonEntityDescription(
     key="search_fm",
+    name="Search Radiostations",
     translation_key="search_fm",
 )
 
