@@ -102,10 +102,6 @@ class ArtsaunaBLEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 if (
                     discovery.address in current_addresses
                     or discovery.address in self._discovered_devices
-                    or not any(
-                        discovery.name.startswith(local_name)
-                        for local_name in LOCAL_NAMES
-                    )
                 ):
                     continue
                 self._discovered_devices[discovery.address] = discovery
