@@ -107,9 +107,8 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
         self._attr_device_info = DeviceInfo(
             name=name,
             connections={(device_registry.CONNECTION_BLUETOOTH, device.address)},
-            manufacturer="HiLink",
+            manufacturer="HiMaterial",
             model="ArtsaunaBLE",
-            sw_version=getattr(self._device, "fw_ver"),
         )
 
     @property

@@ -70,9 +70,8 @@ class ArtsaunaBLESelect(CoordinatorEntity[ArtsaunaBLECoordinator], SelectEntity)
         self._attr_device_info = DeviceInfo(
             name=name,
             connections={(device_registry.CONNECTION_BLUETOOTH, device.address)},
-            manufacturer="HiLink",
+            manufacturer="HiMaterial",
             model="Artsauna",
-            sw_version=getattr(self._device, "fw_ver"),
         )
         self._attr_current_option = INTERNAL_RGB_COLOR_MAP.inverse[0]
 
