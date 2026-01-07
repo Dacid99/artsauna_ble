@@ -34,7 +34,7 @@ from homeassistant.components.bluetooth import (
 from homeassistant.const import CONF_ADDRESS
 
 from .artsauna_ble import ArtsaunaBLEAdapter
-from .const import DOMAIN, LOCAL_NAMES
+from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
