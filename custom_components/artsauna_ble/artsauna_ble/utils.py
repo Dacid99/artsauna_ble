@@ -21,6 +21,7 @@ from . import const
 
 def construct_volume_cmd_data(volume: int) -> bytes:
     data = const.CMD_VOLUME_PREFIX + bytes([volume])
+    data += bytes([sum(data[2:])])
     return data
 
 
