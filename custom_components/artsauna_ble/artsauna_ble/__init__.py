@@ -16,8 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-"""Constants for the artsauna-bt integration."""
+from artsauna_ble_adapter import ArtsaunaBLEAdapter
+from models import ArtsaunaState
 
-DOMAIN = "sbv"
-
-LOCAL_NAMES = {}  # {"SAUNA BT-APP"}
+__all__ = ["ArtsaunaBLEAdapter", "ArtsaunaState"]

@@ -1,5 +1,5 @@
 {
-  "domain": "sbv",
+  "domain": "artsauna_ble",
   "name": "artsauna-bt",
   "codeowners": ["@sbv"],
   "config_flow": true,

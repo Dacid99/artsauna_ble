@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .artsauna_ble import ArtsaunaBLE
+from .artsauna_ble import ArtsaunaBLEAdapter
 from .coordinator import ArtsaunaBLECoordinator
 
 
@@ -13,5 +13,5 @@ class ArtsaunaBLEData:
     """Data for the artsauna ble integration."""
 
     title: str
-    device: ArtsaunaBLE
+    device: ArtsaunaBLEAdapter
     coordinator: ArtsaunaBLECoordinator

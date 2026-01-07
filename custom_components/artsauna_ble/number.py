@@ -2,8 +2,12 @@
 
 import logging
 
-from artsauna_ble.const import INTERNAL_RGB_COLOR_MAP
-from homeassistant.components.select import SelectEntity, SelectEntityDescription
+from homeassistant.components.number import (
+    NumberDeviceClass,
+    NumberEntity,
+    NumberEntityDescription,
+    NumberMode,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
@@ -12,20 +16,27 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from . import ArtsaunaBLE, ArtsaunaBLECoordinator
+from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import DOMAIN
+from .coordinator import ArtsaunaBLECoordinator
 from .models import ArtsaunaBLEData
 
 _LOGGER = logging.getLogger(__name__)
 
-RGB_SELECT_DESCRIPTION = SelectEntityDescription(
-    key="rgb",
-    translation_key="rgb",
-    options=list(INTERNAL_RGB_COLOR_MAP.keys()),
+VOLUME_DESCRIPTION = NumberEntityDescription(
+    key="volume",
+    translation_key="volume",
     entity_category=EntityCategory.CONFIG,
+    device_class=NumberDeviceClass.SOUND_PRESSURE,
+    mode=NumberMode.SLIDER,
+    native_min_value=0,
+    native_max_value=50,
+    native_step=1,
 )
 
-SELECT_ENTITY_DESCRIPTIONS = [RGB_SELECT_DESCRIPTION]
+SENSOR_DESCRIPTIONS = [
+    VOLUME_DESCRIPTION,
+]
 
 
 async def async_setup_entry(
@@ -35,37 +46,38 @@ async def async_setup_entry(
 ) -> None:
     """Set up the platform for ArtsaunaBLE."""
     data: ArtsaunaBLEData = hass.data[DOMAIN][entry.entry_id]
+    async_add_entities(
+        ArtsaunaBLENumber(
+            data.coordinator,
+            data.device,
+            entry.title,
+            description,
+        )
+        for description in SENSOR_DESCRIPTIONS
+    )
 
-    entities = [
-        ArtsaunaBLESelect(data.coordinator, data.device, entry.title, description)
-        for description in SELECT_ENTITY_DESCRIPTIONS
-    ]
 
-    async_add_entities(entities)
-
-
-class ArtsaunaBLESelect(CoordinatorEntity[ArtsaunaBLECoordinator], SelectEntity):
+class ArtsaunaBLENumber(CoordinatorEntity[ArtsaunaBLECoordinator], NumberEntity):
     """Generic sensor for ArtsaunaBLE."""
 
     _attr_has_entity_name = True
-    _attr_entity_category = EntityCategory.CONFIG
     _attr_entity_registry_enabled_default = True
     _attr_entity_registry_visible_default = True
 
     def __init__(
         self,
         coordinator: ArtsaunaBLECoordinator,
-        device: ArtsaunaBLE,
+        device: ArtsaunaBLEAdapter,
         name: str,
-        description: SelectEntityDescription,
+        description: NumberEntityDescription,
     ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator)
         self._coordinator = coordinator
+        self._device = device
         self.entity_description = description
         self._key = description.key
-        self._device = device
-        self._attr_unique_id = f"{device.name}_{self._key}_select"
+        self._attr_unique_id = f"{device.name}_{self._key}_number"
         self._attr_device_info = DeviceInfo(
             name=name,
             connections={(device_registry.CONNECTION_BLUETOOTH, device.address)},
@@ -73,16 +85,12 @@ class ArtsaunaBLESelect(CoordinatorEntity[ArtsaunaBLECoordinator], SelectEntity)
             model="Artsauna",
             sw_version=getattr(self._device, "fw_ver"),
         )
-        self._attr_current_option = INTERNAL_RGB_COLOR_MAP.inverse[0]
+        self._attr_native_value = 0
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        match self._key:
-            case "rgb":
-                self._attr_current_option = INTERNAL_RGB_COLOR_MAP.inverse[
-                    self._device.rgb_mode
-                ]
+        self._attr_native_value = getattr(self._device, self._key)
         self.async_write_ha_state()
 
     @property
@@ -90,5 +98,10 @@ class ArtsaunaBLESelect(CoordinatorEntity[ArtsaunaBLECoordinator], SelectEntity)
         """Unavailable if coordinator isn't connected."""
         return self._coordinator.connected and super().available
 
-    async def async_select_option(self, option: str) -> None:
-        await self._device.send_set_rgb(INTERNAL_RGB_COLOR_MAP[option])
+    async def async_set_native_value(self, value: float) -> None:
+        """Update the current value."""
+        match self._key:
+            case "volume":
+                return await self._device.send_set_volume(int(value) % 50)
+            case _:
+                _LOGGER.error("Wrong KEY for number: %s", self._key)

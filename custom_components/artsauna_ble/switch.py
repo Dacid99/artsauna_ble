@@ -17,8 +17,9 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from . import ArtsaunaBLE, ArtsaunaBLECoordinator
+from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import DOMAIN
+from .coordinator import ArtsaunaBLECoordinator
 from .models import ArtsaunaBLEData
 
 _LOGGER = logging.getLogger(__name__)
@@ -109,7 +110,7 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
     def __init__(
         self,
         coordinator: ArtsaunaBLECoordinator,
-        device: ArtsaunaBLE,
+        device: ArtsaunaBLEAdapter,
         name: str,
         description: SwitchEntityDescription,
     ) -> None:

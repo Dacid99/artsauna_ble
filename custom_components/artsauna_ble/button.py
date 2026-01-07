@@ -2,6 +2,7 @@
 
 import logging
 
+from coordinator import ArtsaunaBLECoordinator
 from homeassistant.components.button import (
     ButtonDeviceClass,
     ButtonEntity,
@@ -15,7 +16,7 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from . import ArtsaunaBLE, ArtsaunaBLECoordinator
+from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import DOMAIN
 from .models import ArtsaunaBLEData
 
@@ -80,7 +81,7 @@ class ArtsaunaBLEButton(CoordinatorEntity[ArtsaunaBLECoordinator], ButtonEntity)
     def __init__(
         self,
         coordinator: ArtsaunaBLECoordinator,
-        device: ArtsaunaBLE,
+        device: ArtsaunaBLEAdapter,
         name: str,
         description: ButtonEntityDescription,
     ) -> None:

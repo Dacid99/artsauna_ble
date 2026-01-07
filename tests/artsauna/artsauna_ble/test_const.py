@@ -1,6 +1,6 @@
 import re
 
-from custom_components.artsauna.artsauna_ble import const
+from custom_components.artsauna_ble.artsauna_ble import const
 
 
 def test_STATE_NOTIFICATION_REGEX():

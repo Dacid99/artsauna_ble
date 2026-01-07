@@ -42,7 +42,7 @@ from const import (
 )
 from models import ArtsaunaState
 
-from custom_components.artsauna.artsauna_ble.artsauna_command_mixin import (
+from custom_components.artsauna_ble.artsauna_ble.artsauna_command_mixin import (
     ArtsaunaBLECommandMixin,
 )
 
@@ -51,7 +51,9 @@ DEFAULT_ATTEMPTS = sys.maxsize
 BLEAK_BACKOFF_TIME = 0.25
 
 
-class ArtsaunaBLE(ArtsaunaStateMixin, ArtsaunaBLEDeviceMixin, ArtsaunaBLECommandMixin):
+class ArtsaunaBLEAdapter(
+    ArtsaunaStateMixin, ArtsaunaBLEDeviceMixin, ArtsaunaBLECommandMixin
+):
     def __init__(self, ble_device: BLEDevice) -> None:
         self._ble_device = ble_device
         self._state = ArtsaunaState()

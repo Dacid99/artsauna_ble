@@ -32,7 +32,7 @@ from homeassistant.const import CONF_ADDRESS, EVENT_HOMEASSISTANT_STOP, Platform
 from homeassistant.core import Event, HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryNotReady
 
-from .artsauna_ble import ArtsaunaBLE
+from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import DOMAIN
 from .coordinator import ArtsaunaBLECoordinator
 from .models import ArtsaunaBLEData
@@ -62,7 +62,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             f"Could not find Artsauna device with address {address}"
         )
 
-    artsauna_ble = ArtsaunaBLE(ble_device)
+    artsauna_ble = ArtsaunaBLEAdapter(ble_device)
 
     coordinator = ArtsaunaBLECoordinator(hass, artsauna_ble)
 

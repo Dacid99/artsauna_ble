@@ -8,7 +8,7 @@ from homeassistant.core import CALLBACK_TYPE, HassJob, HomeAssistant, callback
 from homeassistant.helpers.event import async_call_later
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
-from .artsauna_ble import ArtsaunaBLE, ArtsaunaConfig, ArtsaunaState
+from .artsauna_ble import ArtsaunaBLEAdapter, ArtsaunaState
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ DEBOUNCE_SECONDS = 1.0
 class ArtsaunaBLECoordinator(DataUpdateCoordinator[None]):
     """Data coordinator for receiving Artsauna updates."""
 
-    def __init__(self, hass: HomeAssistant, artsauna_ble: ArtsaunaBLE) -> None:
+    def __init__(self, hass: HomeAssistant, artsauna_ble: ArtsaunaBLEAdapter) -> None:
         """Initialise the coordinator."""
         super().__init__(
             hass,
@@ -46,7 +46,7 @@ class ArtsaunaBLECoordinator(DataUpdateCoordinator[None]):
         self.async_set_updated_data(None)
 
     @callback
-    def _async_handle_update(self, state: [ArtsaunaState, ArtsaunaConfig]) -> None:
+    def _async_handle_update(self, state: ArtsaunaState) -> None:
         """Just trigger the callbacks."""
         self.connected = True
         previous_last_updated_time = self._last_update_time

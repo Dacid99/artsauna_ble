@@ -33,7 +33,7 @@ from homeassistant.components.bluetooth import (
 )
 from homeassistant.const import CONF_ADDRESS
 
-from .artsauna_ble import ArtsaunaBLE
+from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import DOMAIN, LOCAL_NAMES
 
 _LOGGER = logging.getLogger(__name__)
@@ -77,16 +77,16 @@ class ArtsaunaBLEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 discovery_info.address, raise_on_progress=False
             )
             self._abort_if_unique_id_configured()
-            artsaune_ble = ArtsaunaBLE(discovery_info.device)
+            artsauna_ble = ArtsaunaBLEAdapter(discovery_info.device)
             try:
-                await artsaune_ble.initialise()
+                await artsauna_ble.initialise()
             except BLEAK_EXCEPTIONS:
                 errors["base"] = "cannot_connect"
             except Exception:  # pylint: disable=broad-except
                 _LOGGER.exception("Unexpected error")
                 errors["base"] = "unknown"
             else:
-                await artsaune_ble.stop()
+                await artsauna_ble.stop()
                 return self.async_create_entry(
                     title=local_name,
                     data={
