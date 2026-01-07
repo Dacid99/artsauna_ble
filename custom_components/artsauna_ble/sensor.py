@@ -31,20 +31,23 @@ _LOGGER = logging.getLogger(__name__)
 
 TARGET_TEMP_DESCRIPTION = SensorEntityDescription(
     key="target_temp",
+    name="Target Temperature",
     translation_key="target_temp",
     device_class=SensorDeviceClass.TEMPERATURE,
     state_class=SensorStateClass.MEASUREMENT,
     native_unit_of_measurement=UnitOfTemperature.CELSIUS,
 )
 CURRENT_TEMP_DESCRIPTION = SensorEntityDescription(
-    key="temp_down",
-    translation_key="temp_down",
+    key="current_temp",
+    name="Current Temperature",
+    translation_key="current_temp",
     device_class=SensorDeviceClass.TEMPERATURE,
     state_class=SensorStateClass.MEASUREMENT,
     native_unit_of_measurement=UnitOfTemperature.CELSIUS,
 )
 REMAINING_TIME_DESCRIPTION = SensorEntityDescription(
     key="remaining_time",
+    name="Remaining Time",
     translation_key="remaining_time",
     device_class=SensorDeviceClass.DURATION,
     state_class=SensorStateClass.MEASUREMENT,
@@ -52,6 +55,7 @@ REMAINING_TIME_DESCRIPTION = SensorEntityDescription(
 )
 FM_FREQUENCY_DESCRIPTION = SensorEntityDescription(
     key="fm_frequency",
+    name="FM Frequency",
     translation_key="fm_frequency",
     device_class=SensorDeviceClass.FREQUENCY,
     state_class=SensorStateClass.MEASUREMENT,

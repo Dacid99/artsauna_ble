@@ -27,45 +27,54 @@ _LOGGER = logging.getLogger(__name__)
 
 POWER_DESCRIPTION = SwitchEntityDescription(
     key="power",
+    name="Power",
     translation_key="power",
 )
 
 HEATING_DESCRIPTION = SwitchEntityDescription(
     key="heating",
+    name="Heating",
     translation_key="heating",
 )
 
 EXTERNAL_LIGHT_DESCRIPTION = SwitchEntityDescription(
     key="external_light",
+    name="External Light",
     translation_key="external_light",
 )
 
 INTERNAL_LIGHT_DESCRIPTION = SwitchEntityDescription(
     key="internal_light",
+    name="Internal Light",
     translation_key="internal_light",
 )
 
 AUX_DESCRIPTION = SwitchEntityDescription(
     key="aux",
+    name="AUX Mode",
     translation_key="aux",
 )
 
 FM_DESCRIPTION = SwitchEntityDescription(
     key="fm",
+    name="Radio Mode",
     translation_key="fm",
 )
 
 USB_DESCRIPTION = SwitchEntityDescription(
     key="usb",
+    name="USB Mode",
     translation_key="usb",
 )
 
 BT_DESCRIPTION = SwitchEntityDescription(
     key="bt",
+    name="BT Mode",
     translation_key="bluetooth",
 )
 UNIT_DESCRIPTION = SwitchEntityDescription(
     key="unit",
+    name="Temperature Unit",
     translation_key="unit",
 )
 

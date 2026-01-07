@@ -21,6 +21,7 @@ _LOGGER = logging.getLogger(__name__)
 
 RGB_SELECT_DESCRIPTION = SelectEntityDescription(
     key="rgb",
+    name="RGB Color Mode",
     translation_key="rgb",
     options=list(INTERNAL_RGB_COLOR_MAP.keys()),
     entity_category=EntityCategory.CONFIG,
