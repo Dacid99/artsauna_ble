@@ -266,9 +266,7 @@ class ArtsaunaBLEAdapter(
         """Execute command and read response."""
         if self._client is not None:
             for command in commands:
-                await self._client.write_gatt_char(
-                    CHARACTERISTIC_WRITE, data=command, response=False
-                )
+                await self._client.write_gatt_char(CHARACTERISTIC_WRITE, data=command)
 
     # handle callbacks
     def register_callback(
