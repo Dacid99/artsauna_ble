@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "data": {
-          "address": "Bluetooth address"
+          "address": "Bluetooth Adresse"
         }
       }
     },
@@ -13,7 +13,7 @@
       "unknown": "[%key:common::config_flow::error::unknown%]"
     },
     "abort": {
-      "not_supported": "Device not supported",
+      "not_supported": "Gerät nicht unterstützt",
       "already_in_progress": "[%key:common::config_flow::abort::already_in_progress%]",
       "already_configured": "[%key:common::config_flow::abort::already_configured_device%]",
       "no_devices_found": "[%key:common::config_flow::abort::no_devices_found%]"
@@ -22,72 +22,72 @@
   "entity": {
     "button": {
       "temp_up": {
-        "name": "Temperature +"
+        "name": "Temperatur +"
       },
       "temp_down": {
-        "name": "Temperature -"
+        "name": "Temperatur -"
       },
       "time_up": {
-        "name": "Time +"
+        "name": "Zeit +"
       },
       "time_down": {
-        "name": "Time -"
+        "name": "Zeit -"
       },
       "search_fm": {
-        "name": "Search Radiostations"
+        "name": "Radiosuchlauf starten"
       }
     },
     "select": {
       "rgb": {
-        "name": "RGB Color Mode"
+        "name": "RGB Farbmodus"
       }
     },
     "switch": {
       "power": {
-        "name": "Power"
+        "name": "An/Aus"
       },
       "heating": {
-        "name": "Heating"
+        "name": "Heizung"
       },
       "external_light": {
-        "name": "External Light"
+        "name": "Außenlicht"
       },
       "internal_light": {
-        "name": "Internal Light"
+        "name": "Innenlicht"
       },
       "aux": {
-        "name": "AUX Mode"
+        "name": "AUX Modus"
       },
       "fm": {
-        "name": "Radio Mode"
+        "name": "Radio Modus"
       },
       "usb": {
-        "name": "USB Mode"
+        "name": "USB Modus"
       },
       "bt": {
-        "name": "BT Mode"
+        "name": "BT Modus"
       },
       "unit": {
-        "name": "Temperature Unit"
+        "name": "Temperatureinheit"
       }
     },
     "number": {
       "volume": {
-        "name": "Volume"
+        "name": "Lautstärke"
       }
     },
     "sensor": {
       "target_temp": {
-        "name": "Target Temperature"
+        "name": "Zieltemperatur"
       },
       "current_temp": {
-        "name": "Current Temperature"
+        "name": "Aktuelle Temperatur"
       },
       "remaining_time": {
-        "name": "Remaining Time"
+        "name": "Verbleibende Zeit"
       },
       "fm_frequency": {
-        "name": "FM Frequency"
+        "name": "FM Frequenz"
       }
     }
   }

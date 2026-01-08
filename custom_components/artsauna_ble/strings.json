@@ -20,42 +20,74 @@
     }
   },
   "entity": {
+    "button": {
+      "temp_up": {
+        "name": "Temp +"
+      },
+      "temp_down": {
+        "name": "Temp -"
+      },
+      "time_up": {
+        "name": "Time +"
+      },
+      "time_down": {
+        "name": "Time -"
+      },
+      "search_fm": {
+        "name": "Search Radiostations"
+      }
+    },
+    "select": {
+      "rgb": {
+        "name": "RGB Color Mode"
+      }
+    },
+    "switch": {
+      "power": {
+        "name": "Power"
+      },
+      "heating": {
+        "name": "Heating"
+      },
+      "external_light": {
+        "name": "External Light"
+      },
+      "internal_light": {
+        "name": "Internal Light"
+      },
+      "aux": {
+        "name": "AUX Mode"
+      },
+      "fm": {
+        "name": "Radio Mode"
+      },
+      "usb": {
+        "name": "USB Mode"
+      },
+      "bt": {
+        "name": "BT Mode"
+      },
+      "unit": {
+        "name": "Temperature Unit"
+      }
+    },
+    "number": {
+      "volume": {
+        "name": "Volume"
+      }
+    },
     "sensor": {
-      "target_one_x": {
-        "name": "Target One X"
+      "target_temp": {
+        "name": "Target Temperature"
       },
-      "target_one_y": {
-        "name": "Target One Y"
+      "current_temp": {
+        "name": "Current Temperature"
       },
-      "target_one_speed": {
-        "name": "Target One Speed"
+      "remaining_time": {
+        "name": "Remaining Time"
       },
-      "target_one_resolution": {
-        "name": "Target One Resolution"
-      },
-      "target_two_x": {
-        "name": "Target Two X"
-      },
-      "target_two_y": {
-        "name": "Target Two Y"
-      },
-      "target_two_speed": {
-        "name": "Target Two Speed"
-      },
-      "target_two_resolution": {
-        "name": "Target Two Resolution"
-      },
-      "target_three_x": {
-        "name": "Target Three X"
-      },
-      "target_three_y": {
-        "name": "Target Three Y"
-      },
-      "target_three_speed": {
-        "name": "Target Three Speed"
-      },
-      "target_three_resolution": {
-        "name": "Target Three Resolution"
+      "fm_frequency": {
+        "name": "FM Frequency"
       }
     }
   }

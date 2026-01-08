@@ -15,6 +15,7 @@ from homeassistant.helpers import device_registry
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from propcache.api import cached_property
 
 from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import DOMAIN
@@ -25,8 +26,6 @@ _LOGGER = logging.getLogger(__name__)
 
 VOLUME_DESCRIPTION = NumberEntityDescription(
     key="volume",
-    name="Volume",
-    icon="mdi:volume_up",
     translation_key="volume",
     entity_category=EntityCategory.CONFIG,
     device_class=NumberDeviceClass.SOUND_PRESSURE,
@@ -105,3 +104,20 @@ class ArtsaunaBLENumber(CoordinatorEntity[ArtsaunaBLECoordinator], NumberEntity)
                 return await self._device.send_set_volume(int(value) % 50)
             case _:
                 _LOGGER.error("Wrong KEY for number: %s", self._key)
+
+    @property
+    def available(self) -> bool:
+        return super().available and self._device.is_power_on
+
+    @cached_property
+    def icon(self) -> str | None:
+        match self._key:
+            case "volume":
+                if not self._attr_native_value:
+                    return "mdi:volume-off"
+                if self._attr_native_value <= 16:
+                    return "mdi:volume-low"
+                if self._attr_native_value <= 33:
+                    return "mdi:volume-medium"
+                if self._attr_native_value <= 50:
+                    return "mdi:volume-high"

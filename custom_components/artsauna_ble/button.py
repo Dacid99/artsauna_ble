@@ -25,35 +25,30 @@ _LOGGER = logging.getLogger(__name__)
 
 TEMP_UP_DESCRIPTION = ButtonEntityDescription(
     key="temp_up",
-    name="Temp +",
-    icon="mdi:thermometer_add",
+    icon="mdi:thermometer-plus",
     translation_key="temp_up",
     unit_of_measurement=UnitOfTemperature.CELSIUS,
 )
 TEMP_DOWN_DESCRIPTION = ButtonEntityDescription(
     key="temp_down",
-    name="Temp -",
-    icon="mdi:thermometer_minus",
+    icon="mdi:thermometer-minus",
     translation_key="temp_down",
     unit_of_measurement=UnitOfTemperature.CELSIUS,
 )
 TIME_UP_DESCRIPTION = ButtonEntityDescription(
     key="time_up",
-    name="TIME +",
-    icon="mdi:timer_arrow_up",
+    icon="mdi:timer-plus-outline",
     translation_key="time_up",
     unit_of_measurement=UnitOfTime.MINUTES,
 )
 TIME_DOWN_DESCRIPTION = ButtonEntityDescription(
     key="time_down",
-    name="TIME -",
-    icon="mdi:timer_arrow_down",
+    icon="mdi:timer-minus-outline",
     translation_key="time_down",
     unit_of_measurement=UnitOfTime.MINUTES,
 )
 SEARCH_FM_DESCRIPTION = ButtonEntityDescription(
     key="search_fm",
-    name="Search Radiostations",
     icon="mdi:radio",
     translation_key="search_fm",
 )
@@ -128,3 +123,7 @@ class ArtsaunaBLEButton(CoordinatorEntity[ArtsaunaBLECoordinator], ButtonEntity)
                 return await self._device.send_time_down()
             case _:
                 _LOGGER.error("Wrong KEY for button: %s", self._key)
+
+    @property
+    def available(self) -> bool:
+        return super().available and self._device.is_power_on

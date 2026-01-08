@@ -27,58 +27,43 @@ _LOGGER = logging.getLogger(__name__)
 
 POWER_DESCRIPTION = SwitchEntityDescription(
     key="power",
-    name="Power",
     icon="mdi:power_settings_new",
     translation_key="power",
 )
-
 HEATING_DESCRIPTION = SwitchEntityDescription(
     key="heating",
-    name="Heating",
-    icon="mdi:heat",
+    icon="mdi:heat-wave",
     translation_key="heating",
 )
-
 EXTERNAL_LIGHT_DESCRIPTION = SwitchEntityDescription(
     key="external_light",
-    name="External Light",
     translation_key="external_light",
 )
-
 INTERNAL_LIGHT_DESCRIPTION = SwitchEntityDescription(
     key="internal_light",
-    name="Internal Light",
     translation_key="internal_light",
 )
-
 AUX_DESCRIPTION = SwitchEntityDescription(
     key="aux",
-    name="AUX Mode",
+    icon="mdi:audio-input-stereo-minijack",
     translation_key="aux",
 )
-
 FM_DESCRIPTION = SwitchEntityDescription(
     key="fm",
-    name="Radio Mode",
     icon="mdi:radio",
     translation_key="fm",
 )
-
 USB_DESCRIPTION = SwitchEntityDescription(
     key="usb",
-    name="USB Mode",
+    icon="mdi:usb",
     translation_key="usb",
 )
-
 BT_DESCRIPTION = SwitchEntityDescription(
     key="bt",
-    name="BT Mode",
-    icon="mdi:bluetooth",
-    translation_key="bluetooth",
+    translation_key="bt",
 )
 UNIT_DESCRIPTION = SwitchEntityDescription(
     key="unit",
-    name="Temperature Unit",
     translation_key="unit",
 )
 
@@ -169,10 +154,6 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
 
         self.async_write_ha_state()
 
-    @cached_property
-    def is_on(self) -> bool:
-        return bool(self._attr_is_on)
-
     async def async_turn_on(self, **kwargs: Any) -> None:
         match self._key:
             case "power":
@@ -198,3 +179,33 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         await self.async_turn_on()
+
+    @property
+    def available(self) -> bool:
+        if self._key == "power":
+            return super().available
+        return super().available and self._device.is_power_on
+
+    @cached_property
+    def icon(self) -> str | None:
+        match self._key:
+            case "external_light":
+                return (
+                    "mdi:lightbulb-on-outline"
+                    if self._device.is_external_light_on
+                    else "mdi:lightbulb-outline"
+                )
+            case "internal_light":
+                return (
+                    "mdi:lightbulb-on-outline"
+                    if self._device.is_external_light_on
+                    else "mdi:lightbulb-outline"
+                )
+            case "bt":
+                return "mdi:bluetooth" if self._device.is_bt_on else "mdi:bluetooth-off"
+            case "unit":
+                return (
+                    "mdi:temperature-celsius"
+                    if self._device.is_unit_celsius
+                    else "mdi:temperature-fahrenheit"
+                )

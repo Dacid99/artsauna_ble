@@ -21,8 +21,8 @@ _LOGGER = logging.getLogger(__name__)
 
 RGB_SELECT_DESCRIPTION = SelectEntityDescription(
     key="rgb",
-    name="RGB Color Mode",
     translation_key="rgb",
+    icon="mdi:palette",
     options=list(INTERNAL_RGB_COLOR_MAP.keys()),
     entity_category=EntityCategory.CONFIG,
 )
@@ -74,7 +74,7 @@ class ArtsaunaBLESelect(CoordinatorEntity[ArtsaunaBLECoordinator], SelectEntity)
             manufacturer="HiMaterial",
             model="Artsauna",
         )
-        self._attr_current_option = INTERNAL_RGB_COLOR_MAP.inverse[0]
+        self._attr_current_option = INTERNAL_RGB_COLOR_MAP.inverse[6]
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -88,3 +88,7 @@ class ArtsaunaBLESelect(CoordinatorEntity[ArtsaunaBLECoordinator], SelectEntity)
 
     async def async_select_option(self, option: str) -> None:
         await self._device.send_set_rgb(INTERNAL_RGB_COLOR_MAP[option])
+
+    @property
+    def available(self) -> bool:
+        return super().available and self._device.is_power_on

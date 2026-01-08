@@ -20,6 +20,7 @@ from homeassistant.helpers import device_registry
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from propcache.api import cached_property
 
 from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import DOMAIN
@@ -31,23 +32,18 @@ _LOGGER = logging.getLogger(__name__)
 
 TARGET_TEMP_DESCRIPTION = SensorEntityDescription(
     key="target_temp",
-    name="Target Temperature",
     translation_key="target_temp",
     device_class=SensorDeviceClass.TEMPERATURE,
     state_class=SensorStateClass.MEASUREMENT,
-    native_unit_of_measurement=UnitOfTemperature.CELSIUS,
 )
 CURRENT_TEMP_DESCRIPTION = SensorEntityDescription(
     key="current_temp",
-    name="Current Temperature",
     translation_key="current_temp",
     device_class=SensorDeviceClass.TEMPERATURE,
     state_class=SensorStateClass.MEASUREMENT,
-    native_unit_of_measurement=UnitOfTemperature.CELSIUS,
 )
 REMAINING_TIME_DESCRIPTION = SensorEntityDescription(
     key="remaining_time",
-    name="Remaining Time",
     translation_key="remaining_time",
     device_class=SensorDeviceClass.DURATION,
     state_class=SensorStateClass.MEASUREMENT,
@@ -55,7 +51,6 @@ REMAINING_TIME_DESCRIPTION = SensorEntityDescription(
 )
 FM_FREQUENCY_DESCRIPTION = SensorEntityDescription(
     key="fm_frequency",
-    name="FM Frequency",
     translation_key="fm_frequency",
     device_class=SensorDeviceClass.FREQUENCY,
     state_class=SensorStateClass.MEASUREMENT,
@@ -130,3 +125,17 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
             case _:
                 _LOGGER.error("Wrong KEY for sensor: %s", self._key)
         self.async_write_ha_state()
+
+    @property
+    def available(self) -> bool:
+        return super().available and self._device.is_power_on
+
+    @cached_property
+    def native_unit_of_measurement(self) -> str | None:
+        if self._key in ["current_temp", "target_temp"]:
+            return (
+                UnitOfTemperature.CELSIUS
+                if self._device.is_unit_celsius
+                else UnitOfTemperature.FAHRENHEIT
+            )
+        return super().native_unit_of_measurement
