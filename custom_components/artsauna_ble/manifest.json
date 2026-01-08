@@ -1,18 +1,17 @@
 {
   "domain": "artsauna_ble",
   "name": "artsauna-bt",
+  "version": "0.1.0",
   "codeowners": ["@sbv"],
   "config_flow": true,
   "dependencies": ["bluetooth_adapters"],
-  "documentation": "https://www.home-assistant.io/integrations/sbv",
+  "documentation": "https://github.com/SBV/artsauna-ble",
+  "issue_tracker": "https://github.com/SBV/artsauna-ble/issues",
+  "requirements": ["bluetooth-data-tools>=1.20.0"],
   "homekit": {},
   "iot_class": "local_polling",
   "quality_scale": "bronze",
-  "requirements": [],
   "ssdp": [],
   "zeroconf": [],
-  "integration_type": "device",
-  "version": "0.1.0",
-  "requirements": ["bluetooth-data-tools>=1.20.0"],
-  "documentation": "put github repo here"
+  "integration_type": "device"
 }
