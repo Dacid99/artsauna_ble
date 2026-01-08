@@ -176,6 +176,9 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
                 await self._device.send_toggle_unit()
             case _:
                 _LOGGER.error("Wrong KEY for switch: %s", self._key)
+                return
+        # manually switch the value for fluid ui
+        self._attr_is_on = not self._attr_is_on
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         await self.async_turn_on()
