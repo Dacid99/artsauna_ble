@@ -19,3 +19,5 @@
 """Constants for the artsauna-bt integration."""
 
 DOMAIN = "artsauna_ble"
+
+LOCAL_NAMES = {"SAUNA BT-APP"}
