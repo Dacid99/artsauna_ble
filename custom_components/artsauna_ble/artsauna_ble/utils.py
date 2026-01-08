@@ -16,15 +16,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-from . import const
+from .const import CMD_RGB_OFFSET, CMD_RGB_PREFIX, CMD_VOLUME_PREFIX
+
+
+def internal2external_rgb(internal_rgb: int) -> int:
+    return (internal_rgb + 2) % 9
 
 
 def construct_volume_cmd_data(volume: int) -> bytes:
-    data = const.CMD_VOLUME_PREFIX + bytes([volume])
+    data = CMD_VOLUME_PREFIX + bytes([volume])
     data += bytes([sum(data[2:])])
     return data
 
 
 def construct_rgb_cmd_data(rgb: int) -> bytes:
-    data = const.CMD_RGB_PREFIX + bytes([rgb + const.CMD_RGB_OFFSET])
+    data = CMD_RGB_PREFIX + bytes([internal2external_rgb(rgb) + CMD_RGB_OFFSET])
     return data

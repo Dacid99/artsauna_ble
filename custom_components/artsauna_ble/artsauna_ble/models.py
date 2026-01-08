@@ -59,7 +59,7 @@ class ArtsaunaState:
             remaining_time=int(data[const.TIME_BYTE_POSITION]),
             unit_is_celsius=int(data[const.UNIT_BYTE_POSITION]),
             volume=int(data[const.VOLUME_BYTE_POSITION]),
-            light=int(data[const.LIGHTING_BYTE_POSITION].to_bytes().hex()[0]) % 4,
-            rgb=int(data[const.LIGHTING_BYTE_POSITION].to_bytes().hex()[1]),
+            light=int(data[const.LIGHT_BYTE_POSITION].to_bytes().hex()[0]) % 4,
+            rgb=int(data[const.LIGHT_BYTE_POSITION].to_bytes().hex()[1]),
             fm_frequency=int.from_bytes(data[const.FM_FREQUENCY_BYTES_SLICE]),
         )
