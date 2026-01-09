@@ -27,7 +27,7 @@ _LOGGER = logging.getLogger(__name__)
 
 POWER_DESCRIPTION = SwitchEntityDescription(
     key="power",
-    icon="mdi:power_settings_new",
+    icon="mdi:power",
     translation_key="power",
 )
 HEATING_DESCRIPTION = SwitchEntityDescription(
@@ -212,3 +212,4 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
                     if self._device.is_unit_celsius
                     else "mdi:temperature-fahrenheit"
                 )
+        return super().icon

@@ -23,7 +23,7 @@ from dataclasses import dataclass
 from . import const
 
 
-@dataclass
+@dataclass(frozen=True)
 class ArtsaunaState:
     """State of the Artsauna as communicated via BLE.
 
@@ -44,22 +44,36 @@ class ArtsaunaState:
     fm_frequency: int = 0
 
     @staticmethod
-    def validate_ble_data(data: bytearray) -> bool:
+    def validate_ble_state_data(data: bytearray) -> bool:
         return sum(data[const.CHECKSUM_BYTES_SLICE]) % 256 == int(
             data[const.CHECKSUM_BYTE_POSITION]
         )
 
-    @classmethod
-    def from_ble_state_data(cls, data: bytearray) -> ArtsaunaState:
-        return cls(
-            state=int(data[const.DEVICE_STATE_BYTE_POSITION]),
-            heating_state=int(data[const.HEATING_STATE_BYTE_POSITION]),
-            target_temp=int(data[const.TARGET_TEMP_BYTE_POSITION]),
-            current_temp=int(data[const.CURRENT_TEMP_BYTE_POSITION]),
-            remaining_time=int(data[const.TIME_BYTE_POSITION]),
-            unit_is_celsius=int(data[const.UNIT_BYTE_POSITION]),
-            volume=int(data[const.VOLUME_BYTE_POSITION]),
-            light=int(data[const.LIGHT_BYTE_POSITION].to_bytes().hex()[0]) % 4,
-            rgb=int(data[const.LIGHT_BYTE_POSITION].to_bytes().hex()[1]),
-            fm_frequency=int.from_bytes(data[const.FM_FREQUENCY_BYTES_SLICE]),
+    def new_from_ble_state_data(self, ble_state_data: bytearray) -> ArtsaunaState:
+        return ArtsaunaState(
+            state=int(ble_state_data[const.DEVICE_STATE_BYTE_POSITION]),
+            heating_state=int(ble_state_data[const.HEATING_STATE_BYTE_POSITION]),
+            target_temp=int(ble_state_data[const.TARGET_TEMP_BYTE_POSITION]),
+            current_temp=int(ble_state_data[const.CURRENT_TEMP_BYTE_POSITION]),
+            remaining_time=int(ble_state_data[const.TIME_BYTE_POSITION]),
+            unit_is_celsius=int(ble_state_data[const.UNIT_BYTE_POSITION]),
+            volume=int(ble_state_data[const.VOLUME_BYTE_POSITION]),
+            light=int(ble_state_data[const.LIGHT_BYTE_POSITION].to_bytes().hex()[0])
+            % 4,
+            rgb=int(ble_state_data[const.LIGHT_BYTE_POSITION].to_bytes().hex()[1]),
+            fm_frequency=self.fm_frequency,
+        )
+
+    def new_from_ble_fm_data(self, ble_fm_data: bytearray) -> ArtsaunaState:
+        return ArtsaunaState(
+            state=self.state,
+            heating_state=self.heating_state,
+            target_temp=self.target_temp,
+            current_temp=self.current_temp,
+            remaining_time=self.remaining_time,
+            unit_is_celsius=self.unit_is_celsius,
+            volume=self.volume,
+            light=self.light,
+            rgb=self.rgb,
+            fm_frequency=int.from_bytes(ble_fm_data[const.FM_FREQUENCY_BYTES_SLICE]),
         )

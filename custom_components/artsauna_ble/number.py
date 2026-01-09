@@ -101,7 +101,7 @@ class ArtsaunaBLENumber(CoordinatorEntity[ArtsaunaBLECoordinator], NumberEntity)
         """Update the current value."""
         match self._key:
             case "volume":
-                return await self._device.send_set_volume(int(value) % 50)
+                await self._device.send_set_volume(int(value) % 50)
             case _:
                 _LOGGER.error("Wrong KEY for number: %s", self._key)
 
@@ -121,3 +121,4 @@ class ArtsaunaBLENumber(CoordinatorEntity[ArtsaunaBLECoordinator], NumberEntity)
                     return "mdi:volume-medium"
                 if self._attr_native_value <= 50:
                     return "mdi:volume-high"
+        return super().icon

@@ -97,38 +97,29 @@ class ArtsaunaBLEAdapter(
         msg = re.search(STATE_NOTIFICATION_REGEX, self._notification_buffer)
         if msg:
             self._notification_buffer = self._notification_buffer[msg.end() :]  # noqa: E203
-            data = bytearray(msg.group())
-            _LOGGER.debug("State notification found: %s", data)
+            state_data = bytearray(msg.group())
 
-            if ArtsaunaState.validate_ble_data(data):
-                new_state = ArtsaunaState.from_ble_state_data(data)
-                new_state.fm_frequency = self._state.fm_frequency
-                _LOGGER.debug(
-                    "Setting new state: %s, %s", new_state.state, new_state.current_temp
-                )
+            if ArtsaunaState.validate_ble_state_data(state_data):
+                _LOGGER.debug("State notification found: %s", state_data)
+                new_state = self._state.new_from_ble_state_data(state_data)
                 self._state = new_state
+                _LOGGER.debug("Setting new state: %s", new_state)
 
                 self._fire_callbacks()
             else:
                 _LOGGER.info("Incorrect state notification found: %s", data)
             msg = None
 
-        msg = re.match(FM_NOTIFICATION_REGEX, self._notification_buffer)
+        msg = re.search(FM_NOTIFICATION_REGEX, self._notification_buffer)
         if msg:
             self._notification_buffer = self._notification_buffer[msg.end() :]  # noqa: E203
-            data = bytearray(msg.group())
-            _LOGGER.debug("FM notification found: %s", data)
+            fm_data = bytearray(msg.group())
+            _LOGGER.debug("FM notification found: %s", fm_data)
 
-            self._state = ArtsaunaState.from_ble_state_data(data)
-
+            new_state = self._state.new_from_ble_fm_data(fm_data)
+            self._state = new_state
+            _LOGGER.debug("Setting new state: %s", new_state)
             self._fire_callbacks()
-
-        _LOGGER.debug(
-            "%s: Notification received: %s %s",
-            self.name,
-            data.hex(),
-            self._state,
-        )
 
     async def _ensure_connected(self) -> None:
         """Ensure connection to device is established."""
