@@ -1,6 +1,6 @@
 {
   "domain": "artsauna_ble",
-  "name": "artsauna-bt",
+  "name": "Artsauna-BLE",
   "version": "0.1.0",
   "bluetooth": [
     {
