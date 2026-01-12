@@ -126,4 +126,11 @@ class ArtsaunaBLEButton(CoordinatorEntity[ArtsaunaBLECoordinator], ButtonEntity)
 
     @property
     def available(self) -> bool:
+        match self._key:
+            case "temp_up" | "temp_down" | "time_up" | "time_down":
+                return (
+                    super().available
+                    and self._device.is_power_on
+                    and self._device.is_heating_on
+                )
         return super().available and self._device.is_power_on
