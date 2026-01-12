@@ -47,6 +47,12 @@ cp -r Artsauna-ble/custom_components/Artsauna_ble <ha_root>/custom_components/
 
 or copying the contents manually with a filebrowser of your choice.
 
+## Translation
+
+You'd like to help with the translation of this project?
+
+You can do this by going to [Weblate](https://hosted.weblate.org/projects/artsauna_ble/) and add your language!
+
 ## Contributing
 
 If you encounter any issue with this integration please let us know via the issues section of this repo!
