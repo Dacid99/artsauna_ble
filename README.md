@@ -1,10 +1,8 @@
 # Artsauna BLE Integration for HomeAssistant 
 
-icon
-
 This free and open-source integration allows you to control your Artsauna Device via HomeAssistant.
 
-It has been developed for and tested with an Artsauna Infrared Cabin Type xxxxxxxx.
+It has been developed for and tested with an Artsauna Infrared Cabin Type Oslo.
 
 The controller used is marked as CS-128 and is most likely manufactured by china-based HiMaterial. 
 
@@ -18,6 +16,7 @@ Sensors:
 - Target and current temperature
 - Remaining time
 - Current radio frequency
+- RGB light color
 
 Switches:
 - Power and heating state
@@ -26,12 +25,10 @@ Switches:
 
 Buttons:
 - In- and decrease target temperature and time
+- Cycle RGB light color
 
 Numbers:
 - Set audio volume
-
-Selects:
-- RGB light color
 
 ### Known quirks
 
@@ -41,19 +38,20 @@ Selects:
 
 Get it on HACS (image with link)
 
-or install manually on your server:
+or install manually on your server by running these commmands
 
-By running these commmandss
 ```bash
-git clone https://github.com/SBV/artsauna-ble.git
-cp -r artsauna-ble/custom_components/artsauna_ble <ha_root>/custom_components/
+git clone https://github.com/SBV/Artsauna-ble.git
+cp -r Artsauna-ble/custom_components/Artsauna_ble <ha_root>/custom_components/
 ```
-or copying the contents manually   
+
+or copying the contents manually with a filebrowser of your choice.
+
 ## Contributing
 
 If you encounter any issue with this integration please let us know via the issues section of this repo!
 
-We welcome pull requests, especially if they extend the number of artsauna products that this integration can be used for!
+We welcome pull requests, especially if they extend the number of Artsauna products that this integration can be used for!
 
 ## Thankyous and References
 
