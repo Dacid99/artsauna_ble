@@ -19,6 +19,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import device_registry
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from propcache.api import cached_property
 
@@ -131,9 +132,7 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
             case "fm_frequency":
                 self._attr_native_value = self._device._state.fm_frequency
             case "rgb_mode":
-                self._attr_native_value = INTERNAL_RGB_COLOR_MAP.inverse[
-                    self._device.rgb_mode
-                ]
+                self._attr_native_value = self._device.rgb_mode
             case _:
                 _LOGGER.error("Wrong KEY for sensor: %s", self._key)
         self.async_write_ha_state()
@@ -141,6 +140,12 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
     @property
     def available(self) -> bool:
         return super().available and self._device.is_power_on
+
+    @cached_property
+    def native_value(self):
+        if self._key == "rgb_mode":
+            return INTERNAL_RGB_COLOR_MAP.inverse[self._attr_native_value]
+        return super().native_value
 
     @cached_property
     def native_unit_of_measurement(self) -> str | None:
