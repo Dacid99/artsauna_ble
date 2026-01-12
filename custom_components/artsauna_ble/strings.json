@@ -35,11 +35,9 @@
       },
       "search_fm": {
         "name": "Search Radiostations"
-      }
-    },
-    "select": {
-      "rgb": {
-        "name": "RGB Color Mode"
+      },
+      "cycle_rgb": {
+        "name": "Cycle RGB"
       }
     },
     "switch": {
@@ -88,6 +86,9 @@
       },
       "fm_frequency": {
         "name": "FM Frequency"
+      },
+      "rgb_mode": {
+        "name": "RGB Color Mode"
       }
     }
   }

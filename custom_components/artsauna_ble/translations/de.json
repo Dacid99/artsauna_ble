@@ -35,11 +35,9 @@
       },
       "search_fm": {
         "name": "Radiosuchlauf starten"
-      }
-    },
-    "select": {
-      "rgb": {
-        "name": "RGB Farbmodus"
+      },
+      "cycle_rgb": {
+        "name": "RGB durchschalten"
       }
     },
     "switch": {
@@ -88,6 +86,9 @@
       },
       "fm_frequency": {
         "name": "FM Frequenz"
+      },
+      "rgb_mode": {
+        "name": "RGB Farbmodus"
       }
     }
   }
