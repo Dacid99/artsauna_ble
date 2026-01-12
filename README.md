@@ -58,3 +58,7 @@ We welcome pull requests, especially if they extend the number of Artsauna produ
 - Wireshark (https://www.wireshark.org/)
 - https://github.com/MassiPi/ld2450_ble/ , which served as template for the bluetooth connection components
 - https://github.com/Samurai1201/Artsauna-BLE
+
+## Disclaimer
+
+The developers of this integration are not affiliated with Artsauna or HiMaterial. They have created the integration as open source in their spare time on the basis of publicly accessible information. The use of the integration is at the user's own risk and responsibility. The developers are not liable for any damages arising from the use of the integration.
