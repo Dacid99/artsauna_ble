@@ -61,6 +61,7 @@ FM_FREQUENCY_DESCRIPTION = SensorEntityDescription(
 RGB_MODE_DESCRIPTION = SensorEntityDescription(
     key="rgb_mode",
     translation_key="rgb_mode",
+    icon="mdi:palette",
     state_class=SensorStateClass.MEASUREMENT,
 )
 
@@ -117,6 +118,7 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
             manufacturer="HiMaterial",
             model="ArtsaunaBLE",
         )
+        self._attr_native_value = 6
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -131,9 +133,7 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
             case "fm_frequency":
                 self._attr_native_value = self._device._state.fm_frequency
             case "rgb_mode":
-                self._attr_native_value = INTERNAL_RGB_COLOR_MAP.inverse[
-                    self._device.rgb_mode
-                ]
+                self._attr_native_value = self._device.rgb_mode
             case _:
                 _LOGGER.error("Wrong KEY for sensor: %s", self._key)
         self.async_write_ha_state()
