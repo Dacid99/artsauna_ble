@@ -22,6 +22,8 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from propcache.api import cached_property
 
+from custom_components.artsauna_ble.artsauna_ble.const import INTERNAL_RGB_COLOR_MAP
+
 from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import DOMAIN
 from .coordinator import ArtsaunaBLECoordinator
@@ -56,12 +58,18 @@ FM_FREQUENCY_DESCRIPTION = SensorEntityDescription(
     state_class=SensorStateClass.MEASUREMENT,
     native_unit_of_measurement=UnitOfFrequency.MEGAHERTZ,
 )
+RGB_MODE_DESCRIPTION = SensorEntityDescription(
+    key="rgb_mode",
+    translation_key="rgb_mode",
+    state_class=SensorStateClass.MEASUREMENT,
+)
 
 BUTTON_ENTITY_DESCRIPTIONS = [
     TARGET_TEMP_DESCRIPTION,
     CURRENT_TEMP_DESCRIPTION,
     REMAINING_TIME_DESCRIPTION,
     FM_FREQUENCY_DESCRIPTION,
+    RGB_MODE_DESCRIPTION,
 ]
 
 
@@ -122,6 +130,10 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
                 self._attr_native_value = self._device._state.current_temp
             case "fm_frequency":
                 self._attr_native_value = self._device._state.fm_frequency
+            case "rgb_mode":
+                self._attr_native_value = INTERNAL_RGB_COLOR_MAP.inverse[
+                    self._device.rgb_mode
+                ]
             case _:
                 _LOGGER.error("Wrong KEY for sensor: %s", self._key)
         self.async_write_ha_state()

@@ -60,6 +60,10 @@ class ArtsaunaBLECommandMixin:
     async def send_toggle_usb(self):
         await self._send_command(CMD_TOGGLE_USB)
 
+    async def send_cycle_rgb(self):
+        cmd_data = utils.construct_rgb_cmd_data(self._state.rgb)
+        await self._send_command(cmd_data)
+
     async def send_set_rgb(self, rgb: int):
         cmd_data = utils.construct_rgb_cmd_data(rgb)
         await self._send_command(cmd_data)

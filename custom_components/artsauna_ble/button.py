@@ -52,6 +52,11 @@ SEARCH_FM_DESCRIPTION = ButtonEntityDescription(
     icon="mdi:radio",
     translation_key="search_fm",
 )
+CYCLE_RGB_DESCRIPTION = ButtonEntityDescription(
+    key="cycle_rgb",
+    translation_key="rgb",
+    icon="mdi:palette",
+)
 
 BUTTON_ENTITY_DESCRIPTIONS = [
     TEMP_UP_DESCRIPTION,
@@ -59,6 +64,7 @@ BUTTON_ENTITY_DESCRIPTIONS = [
     TIME_UP_DESCRIPTION,
     TIME_DOWN_DESCRIPTION,
     SEARCH_FM_DESCRIPTION,
+    CYCLE_RGB_DESCRIPTION,
 ]
 
 
@@ -121,6 +127,8 @@ class ArtsaunaBLEButton(CoordinatorEntity[ArtsaunaBLECoordinator], ButtonEntity)
                 return await self._device.send_time_up()
             case "time_down":
                 return await self._device.send_time_down()
+            case "cycle_rgb":
+                return await self._device.send_cycle_rgb()
             case _:
                 _LOGGER.error("Wrong KEY for button: %s", self._key)
 

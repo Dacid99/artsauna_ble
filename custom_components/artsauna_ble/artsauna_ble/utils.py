@@ -19,10 +19,6 @@
 from .const import CMD_RGB_PREFIX, CMD_VOLUME_PREFIX
 
 
-def internal2external_rgb(internal_rgb: int) -> int:
-    return (internal_rgb + 2) % 9
-
-
 def construct_volume_cmd_data(volume: int) -> bytes:
     data = CMD_VOLUME_PREFIX + bytes([volume])
     data += bytes([sum(data[2:])])

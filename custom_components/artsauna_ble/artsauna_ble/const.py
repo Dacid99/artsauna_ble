@@ -32,7 +32,6 @@ CMD_VOLUME_PREFIX = b"\xff\xaa\x05ZG\r"
 CMD_TIME_UP = b"\xff\xaa\x05ZG\x08\x00\xae"
 CMD_TIME_DOWN = b"\xff\xaa\x05ZG\t\x00\xaf"
 CMD_RGB_PREFIX = b"\xff\xaa\x05ZG\n"
-CMD_RGB_OFFSET = 175  # based on external rgb id; 0xaf
 CMD_RGB_1 = b"\xff\xaa\x05ZG\n\x00\xb0"  # internal: 8
 CMD_RGB_2 = b"\xff\xaa\x05ZG\n\x01\xb1"  # 0
 CMD_RGB_3 = b"\xff\xaa\x05ZG\n\x02\xb2"  # 1
