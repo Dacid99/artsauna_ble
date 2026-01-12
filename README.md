@@ -33,6 +33,10 @@ Numbers:
 Selects:
 - RGB light color
 
+### Known quirks
+
+- Heating is always reported as ON when the sauna power is switched to ON.
+
 ## Installation
 
 Get it on HACS (image with link)
