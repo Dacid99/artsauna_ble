@@ -54,7 +54,7 @@ SEARCH_FM_DESCRIPTION = ButtonEntityDescription(
 )
 CYCLE_RGB_DESCRIPTION = ButtonEntityDescription(
     key="cycle_rgb",
-    translation_key="rgb",
+    translation_key="cycle_rgb",
     icon="mdi:palette",
 )
 
