@@ -1,4 +1,4 @@
-# Artsauna BLE Integration for HomeAssistant 
+# Artsauna BLE Integration for HomeAssistant
 
 This free and open-source integration allows you to control your Artsauna Device via HomeAssistant.
 
@@ -36,12 +36,12 @@ Numbers:
 
 ## Installation
 
-Get it on HACS (image with link)
+Get it on HACS
 
 or install manually on your server by running these commmands
 
 ```bash
-git clone https://github.com/SBV/Artsauna-ble.git
+git clone https://github.com/dacid99/Artsauna-ble.git
 cp -r Artsauna-ble/custom_components/Artsauna_ble <ha_root>/custom_components/
 ```
 
@@ -53,12 +53,15 @@ If you encounter any issue with this integration please let us know via the issu
 
 We welcome pull requests, especially if they extend the number of Artsauna products that this integration can be used for!
 
-## Thankyous and References
+## Thank-yous and References
 
-- Wireshark (https://www.wireshark.org/)
-- https://github.com/MassiPi/ld2450_ble/ , which served as template for the bluetooth connection components
-- https://github.com/Samurai1201/Artsauna-BLE
+- [Wireshark](https://www.wireshark.org/)
+- [LD2450 HA Integration](https://github.com/MassiPi/ld2450_ble/), which served as template for the bluetooth connection components
+- [Samurai1202's reverse-engineering of the BLE interface](https://github.com/Samurai1201/Artsauna-BLE), which was the foundation for this project
 
 ## Disclaimer
 
-The developers of this integration are not affiliated with Artsauna or HiMaterial. They have created the integration as open source in their spare time on the basis of publicly accessible information. The use of the integration is at the user's own risk and responsibility. The developers are not liable for any damages arising from the use of the integration.
+The developers of this integration are not affiliated with Artsauna or HiMaterial. 
+They have created the integration as open source in their spare time on the basis of publicly accessible information. 
+The use of the integration is at the user's own risk and responsibility. 
+The developers are not liable for any damages arising from the use of the integration.
