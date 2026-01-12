@@ -19,7 +19,6 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import device_registry
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from propcache.api import cached_property
 
@@ -124,13 +123,13 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
         """Handle updated data from the coordinator."""
         match self._key:
             case "remaining_time":
-                self._attr_native_value = self._device._state.remaining_time
+                self._attr_native_value = self._device.remaining_time
             case "target_temp":
-                self._attr_native_value = self._device._state.target_temp
+                self._attr_native_value = self._device.target_temp
             case "current_temp":
-                self._attr_native_value = self._device._state.current_temp
+                self._attr_native_value = self._device.current_temp
             case "fm_frequency":
-                self._attr_native_value = self._device._state.fm_frequency
+                self._attr_native_value = self._device.fm_frequency
             case "rgb_mode":
                 self._attr_native_value = self._device.rgb_mode
             case _:

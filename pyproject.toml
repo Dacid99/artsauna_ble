@@ -4,6 +4,9 @@ version = "0.1.0"
 description = "Integration for Home Assistant for Artsauna Home Sauna"
 license = "AGPL-3.0-or-later"
 license-files = ["LICENSE"]
+authors = [
+    {name = "David & Philipp Aderbauer", email = "no@email"}
+]
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [

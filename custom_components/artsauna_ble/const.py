@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-"""Constants for the artsauna-bt integration."""
+"""Constants for the Artsauna-BLE integration."""
 
 DOMAIN = "artsauna_ble"
 
