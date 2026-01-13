@@ -49,7 +49,7 @@ VOLUME_DESCRIPTION = NumberEntityDescription(
     device_class=NumberDeviceClass.SOUND_PRESSURE,
     mode=NumberMode.SLIDER,
     native_min_value=0,
-    native_max_value=50,
+    native_max_value=40,
     native_step=1,
 )
 
