@@ -53,14 +53,8 @@
       "internal_light": {
         "name": "Internal Light"
       },
-      "aux": {
-        "name": "AUX Mode"
-      },
       "fm": {
         "name": "Radio Mode"
-      },
-      "usb": {
-        "name": "USB Mode"
       },
       "bt": {
         "name": "BT Mode"

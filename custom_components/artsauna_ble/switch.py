@@ -61,20 +61,10 @@ INTERNAL_LIGHT_DESCRIPTION = SwitchEntityDescription(
     key="internal_light",
     translation_key="internal_light",
 )
-AUX_DESCRIPTION = SwitchEntityDescription(
-    key="aux",
-    icon="mdi:audio-input-stereo-minijack",
-    translation_key="aux",
-)
 FM_DESCRIPTION = SwitchEntityDescription(
     key="fm",
     icon="mdi:radio",
     translation_key="fm",
-)
-USB_DESCRIPTION = SwitchEntityDescription(
-    key="usb",
-    icon="mdi:usb",
-    translation_key="usb",
 )
 BT_DESCRIPTION = SwitchEntityDescription(
     key="bt",
@@ -88,8 +78,6 @@ UNIT_DESCRIPTION = SwitchEntityDescription(
 SWITCH_ENTITY_DESCRIPTIONS = [
     POWER_DESCRIPTION,
     HEATING_DESCRIPTION,
-    USB_DESCRIPTION,
-    AUX_DESCRIPTION,
     BT_DESCRIPTION,
     FM_DESCRIPTION,
     EXTERNAL_LIGHT_DESCRIPTION,
@@ -158,10 +146,6 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
                 self._attr_is_on = self._device.is_external_light_on
             case "internal_light":
                 self._attr_is_on = self._device.is_internal_light_on
-            case "aux":
-                self._attr_is_on = self._device.is_aux_on
-            case "usb":
-                self._attr_is_on = self._device.is_usb_on
             case "bt":
                 self._attr_is_on = self._device.is_bt_on
             case "fm":
@@ -183,10 +167,6 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
                 await self._device.send_toggle_external_light()
             case "internal_light":
                 await self._device.send_toggle_internal_light()
-            case "aux":
-                await self._device.send_toggle_aux()
-            case "usb":
-                await self._device.send_toggle_usb()
             case "bt":
                 await self._device.send_toggle_bt()
             case "fm":
@@ -220,7 +200,7 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
             case "internal_light":
                 return (
                     "mdi:lightbulb-on-outline"
-                    if self._device.is_external_light_on
+                    if self._device.is_internal_light_on
                     else "mdi:lightbulb-outline"
                 )
             case "bt":

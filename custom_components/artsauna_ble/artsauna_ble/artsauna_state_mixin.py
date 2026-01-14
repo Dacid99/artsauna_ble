@@ -77,16 +77,8 @@ class ArtsaunaStateMixin:
         return self._state.unit_is_celsius == 0
 
     @property
-    def is_aux_on(self) -> bool:
-        return self._state.state == 2
-
-    @property
     def is_fm_on(self) -> bool:
         return self._state.state == 0
-
-    @property
-    def is_usb_on(self) -> bool:
-        return self._state.state == 3
 
     @property
     def is_bt_on(self) -> bool:
