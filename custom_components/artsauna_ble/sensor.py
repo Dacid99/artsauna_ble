@@ -35,12 +35,14 @@ _LOGGER = logging.getLogger(__name__)
 TARGET_TEMP_DESCRIPTION = SensorEntityDescription(
     key="target_temp",
     translation_key="target_temp",
-    # device_class=SensorDeviceClass.TEMPERATURE,
+    icon="mdi:thermometer",
+    # device_class=SensorDeviceClass.TEMPERATURE, # don't set temperature to allow switching between F and C
     state_class=SensorStateClass.MEASUREMENT,
 )
 CURRENT_TEMP_DESCRIPTION = SensorEntityDescription(
     key="current_temp",
     translation_key="current_temp",
+    icon="mdi:thermometer",
     # device_class=SensorDeviceClass.TEMPERATURE,
     state_class=SensorStateClass.MEASUREMENT,
 )
