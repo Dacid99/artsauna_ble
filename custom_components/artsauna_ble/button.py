@@ -124,8 +124,7 @@ class ArtsaunaBLEButton(CoordinatorEntity[ArtsaunaBLECoordinator], ButtonEntity)
         self.entity_description = description
         self._key = description.key
         self._device = device
-        self._attr_unique_id = f"{device.name}_{self._key}_button"
-        self._attr_name = f"{device.name}_button_{self._key}"
+        self._attr_unique_id = f"{device.address}_{self._key}"
         self._attr_device_info = DeviceInfo(
             name=name,
             connections={(device_registry.CONNECTION_BLUETOOTH, device.address)},
