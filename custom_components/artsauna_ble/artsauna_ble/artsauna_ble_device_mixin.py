@@ -16,14 +16,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+from functools import cached_property
+
+from homeassistant.helpers.device_registry import format_mac
+
 
 class ArtsaunaBLEDeviceMixin:
-    @property
+    @cached_property
     def address(self) -> str:
         """Return the address."""
-        return self._ble_device.address
+        return format_mac(self._ble_device.address)
 
-    @property
+    @cached_property
     def name(self) -> str:
         """Get the name of the device."""
-        return self._ble_device.name or self._ble_device.address
+        return self._ble_device.name or self.address
