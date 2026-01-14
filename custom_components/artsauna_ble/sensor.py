@@ -126,14 +126,14 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
                 self._attr_native_value = self._device.remaining_time
             case "target_temp":
                 self._attr_native_value = self._device.target_temp
-                self._attr_suggested_unit_of_measurement = (
+                self._sensor_option_unit_of_measurement = (
                     UnitOfTemperature.CELSIUS
                     if self._device.is_unit_celsius
                     else UnitOfTemperature.FAHRENHEIT
                 )
             case "current_temp":
                 self._attr_native_value = self._device.current_temp
-                self._attr_suggested_unit_of_measurement = (
+                self._sensor_option_unit_of_measurement = (
                     UnitOfTemperature.CELSIUS
                     if self._device.is_unit_celsius
                     else UnitOfTemperature.FAHRENHEIT
@@ -155,3 +155,6 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
         if self._key == "rgb_mode":
             return INTERNAL_RGB_COLOR_MAP.inverse[self._attr_native_value]
         return super().native_value
+
+    def unit_of_measurement():
+        super().unit_of_measurement
