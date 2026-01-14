@@ -35,13 +35,13 @@ _LOGGER = logging.getLogger(__name__)
 TARGET_TEMP_DESCRIPTION = SensorEntityDescription(
     key="target_temp",
     translation_key="target_temp",
-    device_class=SensorDeviceClass.TEMPERATURE,
+    # device_class=SensorDeviceClass.TEMPERATURE,
     state_class=SensorStateClass.MEASUREMENT,
 )
 CURRENT_TEMP_DESCRIPTION = SensorEntityDescription(
     key="current_temp",
     translation_key="current_temp",
-    device_class=SensorDeviceClass.TEMPERATURE,
+    # device_class=SensorDeviceClass.TEMPERATURE,
     state_class=SensorStateClass.MEASUREMENT,
 )
 REMAINING_TIME_DESCRIPTION = SensorEntityDescription(
@@ -156,5 +156,12 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
             return INTERNAL_RGB_COLOR_MAP.inverse[self._attr_native_value]
         return super().native_value
 
-    def unit_of_measurement():
-        super().unit_of_measurement
+    @cached_property
+    def native_unit_of_measurement(self) -> str | None:
+        if self._key in ["current_temp", "target_temp"]:
+            return (
+                UnitOfTemperature.CELSIUS
+                if self._device.is_unit_celsius
+                else UnitOfTemperature.FAHRENHEIT
+            )
+        return super().native_unit_of_measurement
