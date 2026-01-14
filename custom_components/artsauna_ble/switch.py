@@ -185,6 +185,12 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
     def available(self) -> bool:
         if self._key == "power":
             return super().available
+        if self._key == "unit":
+            return (
+                super().available
+                and self._device.is_power_on
+                and self._device.is_heating_on
+            )
         return super().available and self._device.is_power_on
 
     @cached_property
