@@ -1,1 +1,89 @@
-{}
+{
+    "config": {
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "address": "عنوان البلوتوث"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "[%key:common::config_flow::error::لا_يمكن_الاتّصال%]",
+            "unknown": "[%key:common::config_flow::error::غير_معروف%]"
+        },
+        "abort": {
+            "not_supported": "الجهاز غير مدعوم",
+            "already_in_progress": "[%key:common::config_flow::abort::قيد_التنفيذ_بالفعل%]",
+            "already_configured": "[%key:common::config_flow::abort::الجهاز_مُهيّأ_مسبقًا%]",
+            "no_devices_found": "[%key:common::config_flow::abort::لم_يتمّ_العثور_على_أيّ_أجهزة%]"
+        }
+    },
+    "entity": {
+        "button": {
+            "temp_up": {
+                "name": "+ رفع درجة الحرارة"
+            },
+            "temp_down": {
+                "name": "- خفض درجة الحرارة"
+            },
+            "time_up": {
+                "name": "+ زيادة الوقت"
+            },
+            "time_down": {
+                "name": "- تقليل الوقت"
+            },
+            "search_fm": {
+                "name": "البحث عن محطات الراديو"
+            },
+            "cycle_rgb": {
+                "name": "RGB الدورة"
+            }
+        },
+        "switch": {
+            "power": {
+                "name": "طاقة"
+            },
+            "heating": {
+                "name": "تدفئة"
+            },
+            "external_light": {
+                "name": "إضاءة خارجية"
+            },
+            "internal_light": {
+                "name": "إضاءة داخلية"
+            },
+            "fm": {
+                "name": "وضع الراديو"
+            },
+            "bt": {
+                "name": "وضع البلوتوث"
+            },
+            "unit": {
+                "name": "وحدة درجة الحرارة"
+            }
+        },
+        "number": {
+            "volume": {
+                "name": "المستوى"
+            }
+        },
+        "sensor": {
+            "target_temp": {
+                "name": "درجة الحرارة المستهدَفة"
+            },
+            "current_temp": {
+                "name": "درجة الحرارة الحالية"
+            },
+            "remaining_time": {
+                "name": "الوقت المتبقّي"
+            },
+            "fm_frequency": {
+                "name": "تردُّد FM"
+            },
+            "rgb_mode": {
+                "name": "وضع ألوان RGB"
+            }
+        }
+    }
+}
