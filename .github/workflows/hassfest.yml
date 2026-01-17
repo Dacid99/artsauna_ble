@@ -1,10 +1,8 @@
-name: Validate with hassfest and HACS
+name: Validate with hassfest
 
 on:
   push:
   pull_request:
-  schedule:
-    - cron: '0 0 1 * *'
 
 jobs:
   validate:
@@ -15,6 +13,3 @@ jobs:
 
       - name: Run hassfest
         uses: home-assistant/actions/hassfest@master
-
-      - name: Run HACS Action
-        uses: hacs/action@22.5.0

@@ -1,0 +1,12 @@
+name: Validate for HACS
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run HACS Action
+        uses: hacs/action@22.5.0
