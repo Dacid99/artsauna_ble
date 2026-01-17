@@ -1,7 +1,6 @@
 {
   "domain": "artsauna_ble",
   "name": "Artsauna-BLE",
-  "version": "0.1.1",
   "bluetooth": [
     {
       "local_name": "SAUNA*"
@@ -11,9 +10,10 @@
   "config_flow": true,
   "dependencies": ["bluetooth_adapters"],
   "documentation": "https://github.com/dacid99/artsauna_ble/blob/master/README.md",
+  "integration_type": "device",
+  "iot_class": "local_polling",
   "issue_tracker": "https://github.com/dacid99/artsauna_ble/issues",
   "requirements": ["bluetooth-data-tools>=1.20.0"],
-  "iot_class": "local_polling",
   "quality_scale": "bronze",
-  "integration_type": "device"
+  "version": "0.1.1"
 }
