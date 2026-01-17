@@ -2,7 +2,10 @@ name: Validate with hassfest
 
 on:
   push:
+    branches: [master]
   pull_request:
+    branches: [master]
+  workflow_dispatch:
 
 jobs:
   validate:
