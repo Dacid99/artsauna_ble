@@ -1,1 +1,89 @@
-{}
+{
+    "config": {
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "address": "Bluetoothi aadress"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+            "unknown": "[%key:common::config_flow::error::unknown%]"
+        },
+        "abort": {
+            "not_supported": "Seade pole toetatud",
+            "already_in_progress": "[%key:common::config_flow::abort::already_in_progress%]",
+            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]",
+            "no_devices_found": "[%key:common::config_flow::abort::no_devices_found%]"
+        }
+    },
+    "entity": {
+        "button": {
+            "temp_up": {
+                "name": "Temperatuur +"
+            },
+            "temp_down": {
+                "name": "Temperatuur -"
+            },
+            "time_up": {
+                "name": "Aeg +"
+            },
+            "time_down": {
+                "name": "Aeg -"
+            },
+            "search_fm": {
+                "name": "Otsi raadiojaamu"
+            },
+            "cycle_rgb": {
+                "name": "Lappa värvid läbi"
+            }
+        },
+        "switch": {
+            "power": {
+                "name": "Toitenupp"
+            },
+            "heating": {
+                "name": "Kütmine"
+            },
+            "external_light": {
+                "name": "Välisvalgus"
+            },
+            "internal_light": {
+                "name": "Sisevalgus"
+            },
+            "fm": {
+                "name": "Raadiorežiim"
+            },
+            "bt": {
+                "name": "Bluetoothi režiim"
+            },
+            "unit": {
+                "name": "Temperatuuriühik"
+            }
+        },
+        "number": {
+            "volume": {
+                "name": "Helivaljus"
+            }
+        },
+        "sensor": {
+            "target_temp": {
+                "name": "Kuumuse eesmärk"
+            },
+            "current_temp": {
+                "name": "Praegune temperatuur"
+            },
+            "remaining_time": {
+                "name": "Aega lõpuni"
+            },
+            "fm_frequency": {
+                "name": "FM-i sagedus"
+            },
+            "rgb_mode": {
+                "name": "RGB värvirežiim"
+            }
+        }
+    }
+}
