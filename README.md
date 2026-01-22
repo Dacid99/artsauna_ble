@@ -1,5 +1,10 @@
 # Artsauna BLE Integration for HomeAssistant
 
+[![License](https://img.shields.io/github/license/Dacid99/artsauna_ble)](LICENSE)
+[![HACS Supported](https://img.shields.io/badge/HACS-Supported-03a9f4)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Dacid99&repository=artsauna_ble&category=integration)
+[![Downloads](https://img.shields.io/github/downloads/Dacid99/artsauna_ble/total)](https://github.com/Dacid99/artsauna_ble/releases)
+[![Translation status](https://hosted.weblate.org/widget/artsauna_ble/svg-badge.svg)](https://hosted.weblate.org/engage/artsauna_ble/)
+
 This free and open-source integration allows you to control your Artsauna Device via HomeAssistant.
 
 It has been developed for and tested with an Artsauna Infrared Cabin Type Oslo.
@@ -36,7 +41,9 @@ Numbers:
 
 ## Installation
 
-Get it on HACS
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Dacid99&repository=artsauna_ble&category=integration)
+
+[![Add integration](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=artsauna_ble)
 
 or install manually on your server by running these commmands
 
