@@ -155,7 +155,10 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
     @cached_property
     def native_value(self):
         if self._key == "rgb_mode":
-            return INTERNAL_RGB_COLOR_MAP.inverse[self._attr_native_value]
+            try:
+                return INTERNAL_RGB_COLOR_MAP.inverse[self._attr_native_value]
+            except KeyError:
+                return None
         return super().native_value
 
     @cached_property
