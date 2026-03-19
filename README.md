@@ -58,7 +58,10 @@ or copying the contents manually with a filebrowser of your choice.
 
 You'd like to help with the translation of this project?
 
-You can do this by going to [Weblate](https://hosted.weblate.org/projects/artsauna_ble/) and add your language!
+You can do this by going to [Weblate](https://hosted.weblate.org/engage/artsauna_ble/) and add your language!
+
+[![Translation status](https://hosted.weblate.org/widget/artsauna_ble/multi-auto.
+svg)](https://hosted.weblate.org/engage/artsauna_ble/)
 
 ## Contributing
 
