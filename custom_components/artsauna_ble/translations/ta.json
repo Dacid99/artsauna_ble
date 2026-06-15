@@ -1,1 +1,89 @@
-{}
+{
+    "config": {
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "address": "ஊடலை முகவரி"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+            "unknown": "[%key:common::config_flow::error::unknown%]"
+        },
+        "abort": {
+            "not_supported": "சாதனம் ஆதரிக்கப்படவில்லை",
+            "already_in_progress": "[%key:common::config_flow::abort::aready_in_progress%]",
+            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]",
+            "no_devices_found": "[%key:common::config_flow::abort::no_devices_found%]"
+        }
+    },
+    "entity": {
+        "button": {
+            "temp_up": {
+                "name": "வெப்பநிலை +"
+            },
+            "temp_down": {
+                "name": "வெப்பநிலை -"
+            },
+            "time_up": {
+                "name": "நேரம் +"
+            },
+            "time_down": {
+                "name": "நேரம் -"
+            },
+            "search_fm": {
+                "name": "வானொலி நிலையங்களைத் தேடுங்கள்"
+            },
+            "cycle_rgb": {
+                "name": "சுழற்சி RGB"
+            }
+        },
+        "switch": {
+            "power": {
+                "name": "விசை"
+            },
+            "heating": {
+                "name": "வெப்பமூட்டும்"
+            },
+            "external_light": {
+                "name": "வெளிப்புற ஒளி"
+            },
+            "internal_light": {
+                "name": "உள் ஒளி"
+            },
+            "fm": {
+                "name": "ரேடியோ பயன்முறை"
+            },
+            "bt": {
+                "name": "BT பயன்முறை"
+            },
+            "unit": {
+                "name": "வெப்பநிலை அலகு"
+            }
+        },
+        "number": {
+            "volume": {
+                "name": "தொகுதி"
+            }
+        },
+        "sensor": {
+            "target_temp": {
+                "name": "இலக்கு வெப்பநிலை"
+            },
+            "current_temp": {
+                "name": "தற்போதைய வெப்பநிலை"
+            },
+            "remaining_time": {
+                "name": "மீதமுள்ள நேரம்"
+            },
+            "fm_frequency": {
+                "name": "எஃப்எம் அலைவரிசை"
+            },
+            "rgb_mode": {
+                "name": "RGB வண்ண பயன்முறை"
+            }
+        }
+    }
+}
