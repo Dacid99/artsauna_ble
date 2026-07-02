@@ -33,6 +33,7 @@ class ArtsaunaState:
     """
 
     state: int = 0
+    previous_state: int | None = None
     heating_state: int = 0
     target_temp: int = 0
     current_temp: int = 0
@@ -52,6 +53,7 @@ class ArtsaunaState:
     def new_from_ble_state_data(self, ble_state_data: bytearray) -> ArtsaunaState:
         return ArtsaunaState(
             state=int(ble_state_data[const.DEVICE_STATE_BYTE_POSITION]),
+            previous_state=self.state,
             heating_state=int(ble_state_data[const.HEATING_STATE_BYTE_POSITION]),
             target_temp=int(ble_state_data[const.TARGET_TEMP_BYTE_POSITION]),
             current_temp=int(ble_state_data[const.CURRENT_TEMP_BYTE_POSITION]),
@@ -67,6 +69,7 @@ class ArtsaunaState:
     def new_from_ble_fm_data(self, ble_fm_data: bytearray) -> ArtsaunaState:
         return ArtsaunaState(
             state=self.state,
+            previous_state=self.state,
             heating_state=self.heating_state,
             target_temp=self.target_temp,
             current_temp=self.current_temp,

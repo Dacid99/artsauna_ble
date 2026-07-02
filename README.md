@@ -37,7 +37,9 @@ Numbers:
 
 ### Known quirks
 
-- Heating is always reported as ON when the sauna power is switched to ON.
+- None
+
+*Please report if you find weird behaviour!*
 
 ## Installation
 
