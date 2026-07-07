@@ -66,7 +66,7 @@ class ArtsaunaStateMixin:
 
     @property
     def is_heating_on(self) -> bool:
-        return self._state.heating_state == 1 and self._state.previous_state != 0
+        return (self._state.heating_state == 1) and (self._state.previous_state != 5)
 
     @property
     def remaining_time(self) -> int:
