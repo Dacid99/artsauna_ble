@@ -20,8 +20,9 @@
 
 All status notifications and commands use this one Bleak client. Commands
 are sent as write-without-response on FFF1, one byte at a time — see
-PROTOCOL.md for framing and per-command confidence. In particular, power
-has no explicit OFF and must be gated on the current status.
+docs/kdy-protocol.md for framing and per-command confidence. In
+particular, power has no explicit OFF and must be gated on the current
+status.
 """
 
 from __future__ import annotations
@@ -263,7 +264,7 @@ class KdyBLEAdapter:
 
     # commands
     async def send_toggle_power(self) -> None:
-        """Toggle power. No explicit OFF — see PROTOCOL.md safety notes."""
+        """Toggle power. No explicit OFF — see docs/kdy-protocol.md safety notes."""
         await self._send_command(CMD_BYTE_POWER, CMD_VALUE_TOGGLE)
 
     async def send_timer_up(self) -> None:

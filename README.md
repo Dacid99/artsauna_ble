@@ -11,14 +11,12 @@ It has been developed for and tested with an Artsauna Infrared Cabin Type Oslo.
 
 The Artsauna controller used is marked as CS-128 and is most likely manufactured by china-based HiMaterial.
 
-KDY support was added for devices advertising as `KDYSauna-*` (tested against `KDYSauna-10`). The KDY protocol is reverse-engineered; see [PROTOCOL.md](PROTOCOL.md) for the full byte-level protocol and per-field/per-command confidence.
-
 ## Supported devices
 
-| Brand / device | Discovery name | Status |
-| -------------- | -------------- | ------ |
-| Artsauna (HiMaterial CS-128) | `SAUNA*` | Full control (existing) |
-| KDY Sauna | `KDYSauna*` | Full control (phase 1 — some commands unconfirmed, see [PROTOCOL.md](PROTOCOL.md)) |
+| Brand / device               | Discovery name | Status                  | Protocol                                     |
+| ----------------------------- | -------------- | ----------------------- | --------------------------------------------- |
+| Artsauna (HiMaterial CS-128) | `SAUNA*`       | Full control (existing) | —                                             |
+| KDY Sauna                    | `KDYSauna*`    | Full control            | [docs/kdy-protocol.md](docs/kdy-protocol.md) |
 
 ## Features
 
@@ -29,42 +27,50 @@ You can control the Artsauna the same way the proprietary app would allow you to
 All relevant datapoints the sauna BLE exposes are mapped to HA entities.
 
 Sensors:
+
 - Target and current temperature
 - Remaining time
 - Current radio frequency
 - RGB light color
 
 Switches:
+
 - Power and heating state
 - Audio input and radio search mode
 - Lights
 
 Buttons:
+
 - In- and decrease target temperature and time
 - Cycle RGB light color
 
 Numbers:
+
 - Set audio volume
 
 ### KDY Sauna
 
 Sensors:
+
 - Power
 - Target and current temperature
 - Remaining time
 
 Switches:
+
 - Power
 - FM
 - Unit (°C/°F)
 
 Buttons:
+
 - In- and decrease target temperature and time
 - Inside and outside light
 - Cycle RGB light color
 - Toggle audio source
 
 Numbers:
+
 - Set audio volume
 
 ### Known quirks

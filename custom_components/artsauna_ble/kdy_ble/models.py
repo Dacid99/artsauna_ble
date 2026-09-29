@@ -72,7 +72,7 @@ class KdyState:
     """Decoded KDY status.
 
     Bytes 6–12, 19–20 are intentionally not exposed as named fields (unknown).
-    See PROTOCOL.md status frame table for per-field confidence.
+    See docs/kdy-protocol.md status frame table for per-field confidence.
     """
 
     power: bool = False  # byte 1

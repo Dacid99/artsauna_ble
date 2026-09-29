@@ -44,7 +44,7 @@ STATUS_PACKET_LENGTH = 22
 STATUS_START = 0xAA  # verified — byte 0
 STATUS_END = 0xCC  # verified — byte 21
 
-# byte offsets in the AA…CC status frame — see PROTOCOL.md status frame
+# byte offsets in the AA…CC status frame — see docs/kdy-protocol.md status frame
 # table for field semantics and confidence (bytes 6–12, 17, 19–20 unused here
 # as unknown)
 OFFSET_POWER = 1
@@ -63,7 +63,7 @@ COMMAND_PACKET_LENGTH = 22
 COMMAND_START = 0xAA
 COMMAND_END = 0xCC
 
-# write byte indices — see PROTOCOL.md command byte table for confidence
+# write byte indices — see docs/kdy-protocol.md command byte table for confidence
 CMD_BYTE_POWER = 1
 CMD_BYTE_TIMER = 3
 CMD_BYTE_TARGET_TEMP = 5
