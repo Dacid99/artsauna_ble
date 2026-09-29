@@ -76,9 +76,9 @@ class KdyState:
     """
 
     power: bool = False  # observed — byte 1
-    remaining_minutes: int = 0  # observed — bytes 2–3
-    current_temp: int = 0  # observed — byte 4 (°C)
-    target_temp: int = 0  # observed — byte 5 (°C)
+    remaining_minutes: int = 0  # verified — bytes 2–3
+    current_temp: int = 0  # verified — byte 4 (°C)
+    target_temp: int = 0  # verified — byte 5 (°C)
     volume: int = 0  # observed — byte 13
     fm_on: bool = False  # observed — byte 14
     bt_on: bool = False  # observed — byte 15

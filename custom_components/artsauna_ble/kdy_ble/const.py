@@ -44,11 +44,11 @@ STATUS_PACKET_LENGTH = 22
 STATUS_START = 0xAA  # verified — byte 0
 STATUS_END = 0xCC  # verified — byte 21
 
-# observed — byte offsets in the AA…CC status frame (hardware capture)
-# Byte 1: power 00=OFF, 01=ON
-# Bytes 2–3: remaining minutes (both match; value is decimal minutes as hex)
-# Byte 4: actual / current temperature °C
-# Byte 5: target temperature °C
+# byte offsets in the AA…CC status frame (hardware capture)
+# Byte 1: power 00=OFF, 01=ON — observed
+# Bytes 2–3: remaining minutes (both match; value is decimal minutes as hex) — verified
+# Byte 4: actual / current temperature °C — verified
+# Byte 5: target temperature °C — verified
 # Bytes 6–12: unknown (light/RGB write-side only, never read back by the app)
 # Byte 13: volume, 1-20
 # Byte 14: fm_on, 0/1
@@ -74,19 +74,21 @@ COMMAND_PACKET_LENGTH = 22
 COMMAND_START = 0xAA
 COMMAND_END = 0xCC
 
-# unconfirmed — write byte indices from the decompiled app, not yet verified
-# against real hardware
+# verified — write byte indices confirmed against real hardware (KDYSauna-10)
 CMD_BYTE_POWER = 1
 CMD_BYTE_TIMER = 3
 CMD_BYTE_TARGET_TEMP = 5
 CMD_BYTE_OUTSIDE_LIGHT = 6
 CMD_BYTE_INSIDE_LIGHT = 7
 CMD_BYTE_RGB = 8
-CMD_BYTE_VOLUME = 13
 CMD_BYTE_FM = 14
+CMD_BYTE_UNIT = 18
+
+# unconfirmed — write byte indices from the decompiled app, not yet verified
+# against real hardware
+CMD_BYTE_VOLUME = 13
 CMD_BYTE_BT = 15
 CMD_BYTE_USB = 16
-CMD_BYTE_UNIT = 18
 
 CMD_VALUE_TOGGLE = 1
 CMD_VALUE_STEP_UP = 1

@@ -20,10 +20,10 @@
 
 All status notifications and commands use this one Bleak client. Commands
 are sent as write-without-response on FFF1, one byte at a time, per
-PROTOCOL.md. They are reverse-engineered from the decompiled app and have
-not been verified against real hardware yet — see PROTOCOL.md safety notes,
-in particular that power has no explicit OFF and must be gated on the
-current status.
+PROTOCOL.md. Power, timer, target temperature, outside/inside light, RGB, FM, and unit
+toggle are confirmed against real hardware; volume, BT, and USB are
+decompiled-app values, not yet confirmed — see PROTOCOL.md. In particular,
+power has no explicit OFF and must be gated on the current status.
 """
 
 from __future__ import annotations
