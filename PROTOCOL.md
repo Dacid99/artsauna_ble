@@ -16,7 +16,7 @@ Reverse-engineered from the decompiled vendor app and hardware captures against 
 | `0000fff0-0000-1000-8000-00805f9b34fb` | FFF0 | Service | KDY service | verified |
 | `0000fff1-0000-1000-8000-00805f9b34fb` | FFF1 | Write-without-response, Notify | Command channel; also emits status frames | verified |
 | `0000fff2-0000-1000-8000-00805f9b34fb` | FFF2 | Read, Notify | Status channel | verified |
-| `0000fff3-0000-1000-8000-00805f9b34fb` | FFF3 | Write-without-response | Unused (phase 1) | verified (UUID only) |
+| `0000fff3-0000-1000-8000-00805f9b34fb` | FFF3 | Write-without-response | Unused (phase 1) | verified |
 
 Device advertises as `KDYSauna*`. A single Bleak client/connection is shared for status notifications and command writes.
 
@@ -73,5 +73,4 @@ Device advertises as `KDYSauna*`. A single Bleak client/connection is shared for
 - **Power has no explicit OFF byte.** Sending the power command always toggles; the caller must gate on the last known status to avoid turning the device on when it is already off, or vice versa.
 - **Audio source is a swap, not two independent switches.** The app sends byte 16 (USB) when BT is currently on, and byte 15 (BT) when USB/other is current. There is no independent on/off per source.
 - Bytes 6–12 (light/RGB detail) are write-only from the app's perspective; the status frame never reflects light/RGB state back, so no read-side entity can be derived from them.
-- Read side: remaining time and current/target temperature (status frame bytes 2–5) have been confirmed to decode correctly against real hardware (`KDYSauna-10`).
-- Write side: power, timer, target temperature, outside light, inside light, RGB, FM, and unit toggle have been confirmed against real hardware. Volume, BT, and USB remain decompiled-app values only, not yet confirmed.
+- See the Confidence column in the tables above for what's hardware-confirmed vs. decompiled-app-only. This file is the single source of truth for confidence status — code comments should point here rather than restate it.

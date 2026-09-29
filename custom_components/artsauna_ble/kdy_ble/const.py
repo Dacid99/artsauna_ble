@@ -44,19 +44,9 @@ STATUS_PACKET_LENGTH = 22
 STATUS_START = 0xAA  # verified — byte 0
 STATUS_END = 0xCC  # verified — byte 21
 
-# byte offsets in the AA…CC status frame (hardware capture)
-# Byte 1: power 00=OFF, 01=ON — observed
-# Bytes 2–3: remaining minutes (both match; value is decimal minutes as hex) — verified
-# Byte 4: actual / current temperature °C — verified
-# Byte 5: target temperature °C — verified
-# Bytes 6–12: unknown (light/RGB write-side only, never read back by the app)
-# Byte 13: volume, 1-20
-# Byte 14: fm_on, 0/1
-# Byte 15: bt_on, 0/1
-# Byte 16: usb_on, 0/1
-# Byte 17: work_mode indicator (present, unused by any entity)
-# Byte 18: unit_fahrenheit, 0=Celsius / non-zero=Fahrenheit
-# Bytes 19–20: unknown
+# byte offsets in the AA…CC status frame — see PROTOCOL.md status frame
+# table for field semantics and confidence (bytes 6–12, 17, 19–20 unused here
+# as unknown)
 OFFSET_POWER = 1
 OFFSET_REMAINING_MINUTES = 2
 OFFSET_CURRENT_TEMP = 4
@@ -67,28 +57,24 @@ OFFSET_BT_ON = 15
 OFFSET_USB_ON = 16
 OFFSET_UNIT_FAHRENHEIT = 18
 
-# verified — command frame framing (decompiled app ``d(byte value, int index)``):
+# command frame framing (decompiled app ``d(byte value, int index)``):
 # all 22 bytes zero, byte 0 = 0xAA, byte 21 = 0xCC, exactly one byte set.
-# Never sent to real hardware — see PROTOCOL.md safety notes.
 COMMAND_PACKET_LENGTH = 22
 COMMAND_START = 0xAA
 COMMAND_END = 0xCC
 
-# verified — write byte indices confirmed against real hardware (KDYSauna-10)
+# write byte indices — see PROTOCOL.md command byte table for confidence
 CMD_BYTE_POWER = 1
 CMD_BYTE_TIMER = 3
 CMD_BYTE_TARGET_TEMP = 5
 CMD_BYTE_OUTSIDE_LIGHT = 6
 CMD_BYTE_INSIDE_LIGHT = 7
 CMD_BYTE_RGB = 8
-CMD_BYTE_FM = 14
-CMD_BYTE_UNIT = 18
-
-# unconfirmed — write byte indices from the decompiled app, not yet verified
-# against real hardware
 CMD_BYTE_VOLUME = 13
+CMD_BYTE_FM = 14
 CMD_BYTE_BT = 15
 CMD_BYTE_USB = 16
+CMD_BYTE_UNIT = 18
 
 CMD_VALUE_TOGGLE = 1
 CMD_VALUE_STEP_UP = 1

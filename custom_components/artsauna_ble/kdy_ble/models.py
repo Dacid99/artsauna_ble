@@ -71,20 +71,20 @@ def build_command_packet(byte_index: int, value: int) -> bytes:
 class KdyState:
     """Decoded KDY status.
 
-    Fields other than ``raw`` are only set from observed offsets.
     Bytes 6–12, 19–20 are intentionally not exposed as named fields (unknown).
+    See PROTOCOL.md status frame table for per-field confidence.
     """
 
-    power: bool = False  # observed — byte 1
-    remaining_minutes: int = 0  # verified — bytes 2–3
-    current_temp: int = 0  # verified — byte 4 (°C)
-    target_temp: int = 0  # verified — byte 5 (°C)
-    volume: int = 0  # observed — byte 13
-    fm_on: bool = False  # observed — byte 14
-    bt_on: bool = False  # observed — byte 15
-    usb_on: bool = False  # observed — byte 16
-    unit_fahrenheit: bool = False  # observed — byte 18
-    raw: bytes = field(default_factory=bytes)  # verified — full notification payload
+    power: bool = False  # byte 1
+    remaining_minutes: int = 0  # bytes 2–3
+    current_temp: int = 0  # byte 4 (°C)
+    target_temp: int = 0  # byte 5 (°C)
+    volume: int = 0  # byte 13
+    fm_on: bool = False  # byte 14
+    bt_on: bool = False  # byte 15
+    usb_on: bool = False  # byte 16
+    unit_fahrenheit: bool = False  # byte 18
+    raw: bytes = field(default_factory=bytes)  # full notification payload
 
     @staticmethod
     def is_status_frame(data: bytes | bytearray) -> bool:

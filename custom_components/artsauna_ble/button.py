@@ -203,8 +203,8 @@ class ArtsaunaBLEButton(CoordinatorEntity[ArtsaunaBLECoordinator], ButtonEntity)
 class KdyBLEButton(CoordinatorEntity[ArtsaunaBLECoordinator], ButtonEntity):
     """Button for KDY Sauna BLE devices.
 
-    All of these send a relative step or a stateless toggle command,
-    confirmed against real hardware — see PROTOCOL.md.
+    All of these send a relative step or a stateless toggle command — see
+    PROTOCOL.md for per-command confidence.
     """
 
     _attr_has_entity_name = True

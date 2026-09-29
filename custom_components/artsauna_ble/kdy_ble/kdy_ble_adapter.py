@@ -19,11 +19,9 @@
 """Single-connection KDY Sauna BLE adapter.
 
 All status notifications and commands use this one Bleak client. Commands
-are sent as write-without-response on FFF1, one byte at a time, per
-PROTOCOL.md. Power, timer, target temperature, outside/inside light, RGB, FM, and unit
-toggle are confirmed against real hardware; volume, BT, and USB are
-decompiled-app values, not yet confirmed — see PROTOCOL.md. In particular,
-power has no explicit OFF and must be gated on the current status.
+are sent as write-without-response on FFF1, one byte at a time — see
+PROTOCOL.md for framing and per-command confidence. In particular, power
+has no explicit OFF and must be gated on the current status.
 """
 
 from __future__ import annotations

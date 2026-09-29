@@ -11,14 +11,14 @@ It has been developed for and tested with an Artsauna Infrared Cabin Type Oslo.
 
 The Artsauna controller used is marked as CS-128 and is most likely manufactured by china-based HiMaterial.
 
-KDY support was added for devices advertising as `KDYSauna-*` (tested against `KDYSauna-10`). The KDY protocol is still being reverse-engineered; only fields confirmed from hardware captures are exposed.
+KDY support was added for devices advertising as `KDYSauna-*` (tested against `KDYSauna-10`). The KDY protocol is reverse-engineered; see [PROTOCOL.md](PROTOCOL.md) for the full byte-level protocol and per-field/per-command confidence.
 
 ## Supported devices
 
 | Brand / device | Discovery name | Status |
 | -------------- | -------------- | ------ |
 | Artsauna (HiMaterial CS-128) | `SAUNA*` | Full control (existing) |
-| KDY Sauna | `KDYSauna*` | Read-only status (phase 1) |
+| KDY Sauna | `KDYSauna*` | Full control (phase 1 — some commands unconfirmed, see [PROTOCOL.md](PROTOCOL.md)) |
 
 ## Features
 
@@ -46,27 +46,26 @@ Buttons:
 Numbers:
 - Set audio volume
 
-### KDY Sauna (phase 1 — reverse engineering)
+### KDY Sauna
 
-KDY uses a different GATT layout (`FFF0` / `FFF1` / `FFF2` / `FFF3`) and a 22-byte `AA…CC` status frame on `FFF2`. The integration keeps a **single BLE connection** per device for status and notifications (commands will reuse that same connection once verified).
+Sensors:
+- Power
+- Target and current temperature
+- Remaining time
 
-| Function | Status |
-| -------- | ------ |
-| Device Discovery | known (`KDYSauna*`) |
-| BLE Connection | known (one shared connection) |
-| FFF1 Notify | known (RAW logged; not parsed) |
-| FFF2 Read/Notify | known (status frames) |
-| FFF3 Write | known UUID; unused (writes not verified) |
-| Power | observed (sensor, read-only) |
-| Temperature (actual / target) | observed (sensors; °C as raw byte) |
-| Timer (remaining minutes) | observed (sensor) |
-| Innenlicht | still to verify |
-| Außenlicht | still to verify |
-| RGB | still to verify |
-| Solltemperatur writes | still to verify |
-| Commands | still to verify — **not implemented** |
+Switches:
+- Power
+- FM
+- Unit (°C/°F)
 
-Unknown status bytes are left undecoded. Enable debug logging for `custom_components.artsauna_ble.kdy_ble` to see RAW notification hex while reverse-engineering.
+Buttons:
+- In- and decrease target temperature and time
+- Inside and outside light
+- Cycle RGB light color
+- Toggle audio source
+
+Numbers:
+- Set audio volume
 
 ### Known quirks
 
