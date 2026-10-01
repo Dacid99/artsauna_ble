@@ -130,8 +130,18 @@ class KdyBLEAdapter:
 
     async def initialise(self) -> None:
         """Connect and subscribe to notifications on the shared client."""
-        await self._ensure_connected()
+        await self._ensure_ready()
 
+    async def _ensure_ready(self) -> None:
+        """Ensure connected with notification subscriptions active."""
+        need_subscribe = not (self._client and self._client.is_connected)
+        await self._ensure_connected()
+        self._expected_disconnect = False
+        if need_subscribe:
+            await self._start_notifications()
+
+    async def _start_notifications(self) -> None:
+        """Subscribe to status notifications on the connected client."""
         if self._client is None:
             _LOGGER.debug("%s: Client is unexpectedly None", self.name)
             return
@@ -210,9 +220,7 @@ class KdyBLEAdapter:
         """Attempt a reconnect on the same adapter instance."""
         _LOGGER.debug("%s: ensuring connection", self.name)
         try:
-            await self._ensure_connected()
-            _LOGGER.debug("%s: ensured connection - initialising", self.name)
-            await self.initialise()
+            await self._ensure_ready()
         except BleakNotFoundError:
             _LOGGER.debug("%s: failed to ensure connection - backing off", self.name)
             await asyncio.sleep(BLEAK_BACKOFF_TIME)
@@ -294,7 +302,7 @@ class KdyBLEAdapter:
 
     async def _send_command(self, byte_index: int, value: int) -> None:
         """Send a single-byte command to the device."""
-        await self._ensure_connected()
+        await self._ensure_ready()
         await self._send_command_while_connected(byte_index, value)
 
     async def _send_command_while_connected(self, byte_index: int, value: int) -> None:
@@ -319,11 +327,13 @@ class KdyBLEAdapter:
     @retry_bluetooth_connection_error(DEFAULT_ATTEMPTS)
     async def _send_command_locked(self, packet: bytes) -> None:
         """Write a command packet, disconnecting on error to allow retry."""
+        await self._ensure_ready()
+        if self._client is None:
+            raise BleakError(f"{self.name}: no BLE client after connect")
         try:
-            if self._client is not None:
-                await self._client.write_gatt_char(
-                    CHARACTERISTIC_FFF1, data=packet, response=False
-                )
+            await self._client.write_gatt_char(
+                CHARACTERISTIC_FFF1, data=packet, response=False
+            )
         except BleakDBusError as ex:
             await asyncio.sleep(BLEAK_BACKOFF_TIME)
             _LOGGER.debug(
