@@ -9,7 +9,9 @@ This free and open-source integration allows you to control your Artsauna Device
 
 It has been developed for and tested with an Artsauna Infrared Cabin Type Oslo.
 
-The controller used is marked as CS-128 and is most likely manufactured by china-based HiMaterial. 
+The controller used is marked as CS-128 and is most likely manufactured by china-based HiMaterial.
+
+Protocol details: [docs/artsauna-protocol.md](docs/artsauna-protocol.md)
 
 ## Features
 
