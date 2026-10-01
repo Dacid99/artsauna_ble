@@ -16,11 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-"""KDY Sauna BLE state model.
-
-Only hardware-verified / high-confidence observed fields are decoded.
-Unknown bytes remain in ``raw`` and are never assigned meaning.
-"""
+"""KDY Sauna BLE state model."""
 
 from __future__ import annotations
 
@@ -50,11 +46,7 @@ class InvalidStatusPacket(ValueError):
 
 
 def build_command_packet(byte_index: int, value: int) -> bytes:
-    """Build a 22-byte AA…CC command packet with exactly one byte set.
-
-    Mirrors the decompiled app's ``d(byte value, int index)`` write helper:
-    all bytes zero except framing and the single target byte.
-    """
+    """Build a 22-byte AA…CC command packet with exactly one byte set."""
     if not 1 <= byte_index <= COMMAND_PACKET_LENGTH - 2:
         raise ValueError(f"byte_index {byte_index} out of range")
     if not 0 <= value <= 0xFF:
@@ -69,26 +61,22 @@ def build_command_packet(byte_index: int, value: int) -> bytes:
 
 @dataclass(frozen=True)
 class KdyState:
-    """Decoded KDY status.
+    """Decoded KDY status notification."""
 
-    Bytes 6–12, 19–20 are intentionally not exposed as named fields (unknown).
-    See docs/kdy-protocol.md status frame table for per-field confidence.
-    """
-
-    power: bool = False  # byte 1
-    remaining_minutes: int = 0  # bytes 2–3
-    current_temp: int = 0  # byte 4 (°C)
-    target_temp: int = 0  # byte 5 (°C)
-    volume: int = 0  # byte 13
-    fm_on: bool = False  # byte 14
-    bt_on: bool = False  # byte 15
-    usb_on: bool = False  # byte 16
-    unit_fahrenheit: bool = False  # byte 18
-    raw: bytes = field(default_factory=bytes)  # full notification payload
+    power: bool = False
+    remaining_minutes: int = 0
+    current_temp: int = 0
+    target_temp: int = 0
+    volume: int = 0
+    fm_on: bool = False
+    bt_on: bool = False
+    usb_on: bool = False
+    unit_fahrenheit: bool = False
+    raw: bytes = field(default_factory=bytes)
 
     @staticmethod
     def is_status_frame(data: bytes | bytearray) -> bool:
-        """Return True if data looks like a verified AA…CC status frame."""
+        """Return True if data is a 22-byte AA…CC status frame."""
         return (
             len(data) == STATUS_PACKET_LENGTH
             and data[0] == STATUS_START
@@ -97,10 +85,7 @@ class KdyState:
 
     @classmethod
     def from_ble_status(cls, data: bytes | bytearray) -> KdyState:
-        """Parse known fields from a status notification.
-
-        Raises InvalidStatusPacket if framing is not verified AA…CC / 22 bytes.
-        """
+        """Parse known fields from a status notification."""
         payload = bytes(data)
         if not cls.is_status_frame(payload):
             raise InvalidStatusPacket(
@@ -108,12 +93,9 @@ class KdyState:
                 f"got len={len(payload)} hex={payload.hex()}"
             )
 
-        # observed: bytes 2 and 3 both carry remaining minutes and match
-        remaining = payload[OFFSET_REMAINING_MINUTES]
-
         return cls(
             power=payload[OFFSET_POWER] != 0,
-            remaining_minutes=remaining,
+            remaining_minutes=payload[OFFSET_REMAINING_MINUTES],
             current_temp=payload[OFFSET_CURRENT_TEMP],
             target_temp=payload[OFFSET_TARGET_TEMP],
             volume=payload[OFFSET_VOLUME],
@@ -135,6 +117,5 @@ class KdyState:
             f"FM: {'ON' if self.fm_on else 'OFF'}; "
             f"BT: {'ON' if self.bt_on else 'OFF'}; "
             f"USB: {'ON' if self.usb_on else 'OFF'}; "
-            f"Unit: {'F' if self.unit_fahrenheit else 'C'}; "
-            f"Light/RGB: unknown"
+            f"Unit: {'F' if self.unit_fahrenheit else 'C'}"
         )

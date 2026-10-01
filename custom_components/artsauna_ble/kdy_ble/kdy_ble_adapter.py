@@ -16,14 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-"""Single-connection KDY Sauna BLE adapter.
-
-All status notifications and commands use this one Bleak client. Commands
-are sent as write-without-response on FFF1, one byte at a time — see
-docs/kdy-protocol.md for framing and per-command confidence. In
-particular, power has no explicit OFF and must be gated on the current
-status.
-"""
+"""KDY Sauna BLE adapter."""
 
 from __future__ import annotations
 
@@ -145,12 +138,11 @@ class KdyBLEAdapter:
 
         _LOGGER.debug("%s: Subscribe to FFF2 status notifications", self.name)
         await self._client.start_notify(CHARACTERISTIC_FFF2, self._notification_handler)
-        # FFF1 also has notify — log RAW only until meaning is verified
         try:
             await self._client.start_notify(
                 CHARACTERISTIC_FFF1, self._notification_handler
             )
-            _LOGGER.debug("%s: Also subscribed to FFF1 for RAW logging", self.name)
+            _LOGGER.debug("%s: Also subscribed to FFF1 notifications", self.name)
         except BleakError:
             _LOGGER.debug(
                 "%s: FFF1 notify subscribe failed (optional)", self.name, exc_info=True
@@ -170,14 +162,11 @@ class KdyBLEAdapter:
         raw_hex = bytes(data).hex()
         _LOGGER.debug("%s: RAW notification %s: %s", self.name, label, raw_hex)
 
-        # Status frames have been observed on both FFF1 and FFF2 on real
-        # hardware; the AA...CC framing check below is what validates a
-        # payload as a genuine status packet, not the source characteristic.
         try:
             new_state = KdyState.from_ble_status(data)
         except InvalidStatusPacket:
             _LOGGER.debug(
-                "%s: Non-status or invalid %s payload (kept as RAW only): %s",
+                "%s: Non-status or invalid %s payload: %s",
                 self.name,
                 label,
                 raw_hex,
@@ -264,7 +253,7 @@ class KdyBLEAdapter:
 
     # commands
     async def send_toggle_power(self) -> None:
-        """Toggle power. No explicit OFF — see docs/kdy-protocol.md safety notes."""
+        """Toggle power (hardware has no explicit OFF)."""
         await self._send_command(CMD_BYTE_POWER, CMD_VALUE_TOGGLE)
 
     async def send_timer_up(self) -> None:
@@ -289,18 +278,14 @@ class KdyBLEAdapter:
         await self._send_command(CMD_BYTE_RGB, CMD_VALUE_TOGGLE)
 
     async def send_set_volume(self, volume: int) -> None:
-        """Set volume 1-20 (absolute — the one command that isn't a step)."""
+        """Set absolute volume (1-20)."""
         await self._send_command(CMD_BYTE_VOLUME, volume)
 
     async def send_toggle_fm(self) -> None:
         await self._send_command(CMD_BYTE_FM, CMD_VALUE_TOGGLE)
 
     async def send_toggle_audio_source(self) -> None:
-        """Swap between BT and USB audio source.
-
-        The app sends byte 16 (USB) if BT is currently on, else byte 15
-        (BT) — there is no independent on/off, only a swap.
-        """
+        """Swap BT/USB audio source (app toggles the inactive source byte)."""
         byte_index = CMD_BYTE_USB if self._state.bt_on else CMD_BYTE_BT
         await self._send_command(byte_index, CMD_VALUE_TOGGLE)
 

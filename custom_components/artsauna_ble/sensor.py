@@ -200,7 +200,7 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
 
 
 class KdyBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity):
-    """Read-only sensor for KDY Sauna BLE devices (no commands in phase 1)."""
+    """Sensor for KDY Sauna BLE devices."""
 
     _attr_has_entity_name = True
     _attr_entity_category = EntityCategory.DIAGNOSTIC
@@ -257,7 +257,6 @@ class KdyBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity):
 
     @property
     def available(self) -> bool:
-        # Show known state whenever connected; power-off is a valid reading
         return super().available and self._coordinator.connected
 
     @cached_property

@@ -16,37 +16,21 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-"""KDY Sauna BLE constants.
-
-Confidence labels used in comments:
-  verified  — confirmed against hardware GATT / frame framing
-  observed  — matched live status packets on KDYSauna-10
-  unknown   — present in frames; meaning not established (do not invent)
-"""
+"""KDY Sauna BLE constants."""
 
 from __future__ import annotations
 
-# verified — GATT service and characteristics on KDYSauna-10
 SERVICE_UUID = "0000fff0-0000-1000-8000-00805f9b34fb"
-CHARACTERISTIC_FFF1 = (
-    "0000fff1-0000-1000-8000-00805f9b34fb"  # write-without-response, notify
-)
-CHARACTERISTIC_FFF2 = "0000fff2-0000-1000-8000-00805f9b34fb"  # read, notify (status)
-CHARACTERISTIC_FFF3 = (
-    "0000fff3-0000-1000-8000-00805f9b34fb"  # write-without-response; unused in phase 1
-)
+CHARACTERISTIC_FFF1 = "0000fff1-0000-1000-8000-00805f9b34fb"
+CHARACTERISTIC_FFF2 = "0000fff2-0000-1000-8000-00805f9b34fb"
+CHARACTERISTIC_FFF3 = "0000fff3-0000-1000-8000-00805f9b34fb"
 
-# observed — advertised local name prefix
 DEVICE_NAME_PREFIXES = ("KDYSauna",)
 
-# verified — 22-byte status frame on FFF2
 STATUS_PACKET_LENGTH = 22
-STATUS_START = 0xAA  # verified — byte 0
-STATUS_END = 0xCC  # verified — byte 21
+STATUS_START = 0xAA
+STATUS_END = 0xCC
 
-# byte offsets in the AA…CC status frame — see docs/kdy-protocol.md status frame
-# table for field semantics and confidence (bytes 6–12, 17, 19–20 unused here
-# as unknown)
 OFFSET_POWER = 1
 OFFSET_REMAINING_MINUTES = 2
 OFFSET_CURRENT_TEMP = 4
@@ -57,13 +41,10 @@ OFFSET_BT_ON = 15
 OFFSET_USB_ON = 16
 OFFSET_UNIT_FAHRENHEIT = 18
 
-# command frame framing (decompiled app ``d(byte value, int index)``):
-# all 22 bytes zero, byte 0 = 0xAA, byte 21 = 0xCC, exactly one byte set.
 COMMAND_PACKET_LENGTH = 22
 COMMAND_START = 0xAA
 COMMAND_END = 0xCC
 
-# write byte indices — see docs/kdy-protocol.md command byte table for confidence
 CMD_BYTE_POWER = 1
 CMD_BYTE_TIMER = 3
 CMD_BYTE_TARGET_TEMP = 5

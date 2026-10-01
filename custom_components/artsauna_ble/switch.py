@@ -239,12 +239,7 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
 
 
 class KdyBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity):
-    """Switch for KDY Sauna BLE devices.
-
-    Every write is an unconditional hardware toggle (no explicit on/off —
-    see docs/kdy-protocol.md safety notes), so turn_on/turn_off only send the toggle
-    when the current status actually differs from the desired state.
-    """
+    """Switch for KDY Sauna BLE devices."""
 
     _attr_has_entity_name = True
     _attr_device_class = SwitchDeviceClass.SWITCH

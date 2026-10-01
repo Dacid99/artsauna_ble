@@ -50,12 +50,13 @@ def test_power_off_observed_values() -> None:
     assert state.raw == bytes(payload)
 
 
-def test_format_known_fields_mentions_unknowns() -> None:
+def test_format_known_fields() -> None:
     state = KdyState.from_ble_status(CAPTURED_STATUS)
     text = state.format_known_fields()
     assert "ON" in text
     assert "48" in text
-    assert "unknown" in text.lower()
+    assert "USB: ON" in text
+    assert "Unit: C" in text
 
 
 def test_parse_captured_status_decodes_audio_and_unit_fields() -> None:
