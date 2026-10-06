@@ -10,7 +10,6 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
-    CONF_DEVICE_CLASS,
     EntityCategory,
     UnitOfFrequency,
     UnitOfTemperature,
@@ -27,7 +26,6 @@ from custom_components.artsauna_ble.artsauna_ble.const import INTERNAL_RGB_COLOR
 
 from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import (
-    SaunaDeviceType,
     HASS_DOMAIN,
 )
 from .coordinator import ArtsaunaBLECoordinator

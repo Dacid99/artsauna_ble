@@ -56,7 +56,7 @@ from .const import (
     CMD_VALUE_STEP_UP,
     CMD_VALUE_TOGGLE,
 )
-from .models import InvalidStatusPacket, KdyState, build_command_packet
+from .models import KdyState, build_command_packet
 
 _LOGGER = logging.getLogger(__name__)
 BLEAK_BACKOFF_TIME = 0.25

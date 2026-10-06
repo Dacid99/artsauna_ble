@@ -27,7 +27,7 @@ from homeassistant.components.number import (
     NumberMode,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_DEVICE_CLASS, EntityCategory
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import device_registry
 from homeassistant.helpers.device_registry import DeviceInfo
@@ -36,7 +36,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from propcache.api import cached_property
 
 from .artsauna_ble import ArtsaunaBLEAdapter
-from .const import SaunaDeviceType, HASS_DOMAIN
+from .const import HASS_DOMAIN
 from .coordinator import ArtsaunaBLECoordinator
 from .kdy_ble import KdyBLEAdapter
 from .models import ArtsaunaBLEData
