@@ -60,20 +60,3 @@ CMD_BYTE_UNIT = 18
 CMD_VALUE_TOGGLE = 1
 CMD_VALUE_STEP_UP = 1
 CMD_VALUE_STEP_DOWN = 2
-
-
-def is_kdy_sauna_name(name: str | None) -> bool:
-    """Return True if the advertised name matches known KDYSauna devices."""
-    if not name:
-        return False
-    return name.startswith(DEVICE_NAME_PREFIXES)
-
-
-def short_uuid(uuid: str) -> str:
-    """Return the 16-bit style label for a Bluetooth UUID when possible."""
-    normalized = uuid.lower()
-    if normalized.startswith("0000") and normalized.endswith(
-        "-0000-1000-8000-00805f9b34fb"
-    ):
-        return normalized[4:8].upper()
-    return uuid

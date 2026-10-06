@@ -55,7 +55,6 @@ from .const import (
     CMD_VALUE_STEP_DOWN,
     CMD_VALUE_STEP_UP,
     CMD_VALUE_TOGGLE,
-    short_uuid,
 )
 from .models import InvalidStatusPacket, KdyState, build_command_packet
 
@@ -167,10 +166,9 @@ class KdyBLEAdapter:
 
     def _notification_handler(self, characteristic: object, data: bytearray) -> None:
         """Handle notification responses on the single connection."""
-        char_uuid = getattr(characteristic, "uuid", None)
-        label = short_uuid(str(char_uuid)) if char_uuid else "UNKNOWN"
+        char_uuid = getattr(characteristic, "uuid", "UNKNOWN UUID")
         raw_hex = bytes(data).hex()
-        _LOGGER.debug("%s: RAW notification %s: %s", self.name, label, raw_hex)
+        _LOGGER.debug("%s: RAW notification %s: %s", self.name, char_uuid, raw_hex)
 
         try:
             new_state = KdyState.from_ble_status(data)
@@ -178,7 +176,7 @@ class KdyBLEAdapter:
             _LOGGER.debug(
                 "%s: Non-status or invalid %s payload: %s",
                 self.name,
-                label,
+                char_uuid,
                 raw_hex,
             )
             return
@@ -254,7 +252,7 @@ class KdyBLEAdapter:
                         _LOGGER.debug(
                             "%s: stop_notify %s failed",
                             self.name,
-                            short_uuid(char),
+                            char,
                             exc_info=True,
                         )
                 await client.disconnect()
