@@ -120,19 +120,18 @@ async def async_setup_entry(
 ) -> None:
     """Set up the platform for ArtsaunaBLE."""
     data: ArtsaunaBLEData = hass.data[HASS_DOMAIN][entry.entry_id]
-
-    if entry.data.get(CONF_DEVICE_CLASS) == SaunaDeviceType.KDY:
-        entities = [
-            KdyBLEButton(data.coordinator, data.device, entry.title, description)
-            for description in KDY_BUTTON_ENTITY_DESCRIPTIONS
-        ]
-    else:
-        entities = [
-            ArtsaunaBLEButton(data.coordinator, data.device, entry.title, description)
-            for description in BUTTON_ENTITY_DESCRIPTIONS
-        ]
-
-    async_add_entities(entities)
+    if data and data.device:
+        if isinstance(data.device, KdyBLEAdapter):
+            entities = [
+                KdyBLEButton(data.coordinator, data.device, entry.title, description)
+                for description in KDY_BUTTON_ENTITY_DESCRIPTIONS
+            ]
+        else:
+            entities = [
+                ArtsaunaBLEButton(data.coordinator, data.device, entry.title, description)
+                for description in BUTTON_ENTITY_DESCRIPTIONS
+            ]
+        async_add_entities(entities)
 
 
 class ArtsaunaBLEButton(CoordinatorEntity[ArtsaunaBLECoordinator], ButtonEntity):
