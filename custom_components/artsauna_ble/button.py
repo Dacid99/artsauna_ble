@@ -76,14 +76,14 @@ CYCLE_RGB_DESCRIPTION = ButtonEntityDescription(
     translation_key="cycle_rgb",
     icon="mdi:palette",
 )
-OUTSIDE_LIGHT_DESCRIPTION = ButtonEntityDescription(
-    key="outside_light",
-    translation_key="outside_light",
+EXTERNAL_LIGHT_DESCRIPTION = ButtonEntityDescription(
+    key="external_light",
+    translation_key="external_light",
     icon="mdi:lightbulb-outline",
 )
-INSIDE_LIGHT_DESCRIPTION = ButtonEntityDescription(
-    key="inside_light",
-    translation_key="inside_light",
+INTERNAL_LIGHT_DESCRIPTION = ButtonEntityDescription(
+    key="internal_light",
+    translation_key="internal_light",
     icon="mdi:lightbulb-outline",
 )
 TOGGLE_AUDIO_SOURCE_DESCRIPTION = ButtonEntityDescription(
@@ -106,8 +106,8 @@ KDY_BUTTON_ENTITY_DESCRIPTIONS = [
     TEMP_DOWN_DESCRIPTION,
     TIME_UP_DESCRIPTION,
     TIME_DOWN_DESCRIPTION,
-    OUTSIDE_LIGHT_DESCRIPTION,
-    INSIDE_LIGHT_DESCRIPTION,
+    EXTERNAL_LIGHT_DESCRIPTION,
+    INTERNAL_LIGHT_DESCRIPTION,
     CYCLE_RGB_DESCRIPTION,
     TOGGLE_AUDIO_SOURCE_DESCRIPTION,
 ]
@@ -237,10 +237,10 @@ class KdyBLEButton(CoordinatorEntity[ArtsaunaBLECoordinator], ButtonEntity):
                 return await self._device.send_timer_up()
             case "time_down":
                 return await self._device.send_timer_down()
-            case "outside_light":
-                return await self._device.send_toggle_outside_light()
-            case "inside_light":
-                return await self._device.send_toggle_inside_light()
+            case "external_light":
+                return await self._device.send_toggle_external_light()
+            case "internal_light":
+                return await self._device.send_toggle_internal_light()
             case "cycle_rgb":
                 return await self._device.send_cycle_rgb()
             case "toggle_audio_source":

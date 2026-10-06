@@ -274,10 +274,10 @@ class KdyBLEAdapter:
     async def send_temp_down(self) -> None:
         await self._send_command(CMD_BYTE_TARGET_TEMP, CMD_VALUE_STEP_DOWN)
 
-    async def send_toggle_outside_light(self) -> None:
+    async def send_toggle_external_light(self) -> None:
         await self._send_command(CMD_BYTE_OUTSIDE_LIGHT, CMD_VALUE_TOGGLE)
 
-    async def send_toggle_inside_light(self) -> None:
+    async def send_toggle_internal_light(self) -> None:
         await self._send_command(CMD_BYTE_INSIDE_LIGHT, CMD_VALUE_TOGGLE)
 
     async def send_cycle_rgb(self) -> None:

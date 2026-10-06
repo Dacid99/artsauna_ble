@@ -39,10 +39,10 @@
       "cycle_rgb": {
         "name": "RGB durchschalten"
       },
-      "outside_light": {
+      "external_light": {
         "name": "Außenlicht"
       },
-      "inside_light": {
+      "internal_light": {
         "name": "Innenlicht"
       },
       "toggle_audio_source": {

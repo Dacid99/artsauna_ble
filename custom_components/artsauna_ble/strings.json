@@ -39,10 +39,10 @@
       "cycle_rgb": {
         "name": "Cycle RGB"
       },
-      "outside_light": {
+      "external_light": {
         "name": "Outside Light"
       },
-      "inside_light": {
+      "internal_light": {
         "name": "Inside Light"
       },
       "toggle_audio_source": {

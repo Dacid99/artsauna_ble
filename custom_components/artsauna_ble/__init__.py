@@ -44,7 +44,6 @@ from .models import ArtsaunaBLEData
 PLATFORMS: list[Platform] = [
     Platform.SENSOR,
     Platform.SWITCH,
-    # Platform.SELECT,
     Platform.BUTTON,
     Platform.NUMBER,
 ]
