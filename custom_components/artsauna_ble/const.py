@@ -17,17 +17,10 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 """Constants for the Artsauna-BLE integration."""
+from enum import Enum
+
+class SaunaDeviceType(Enum):
+    ARTSAUNA = "artsauna"
+    KDY = "kdy"
 
 DOMAIN = "artsauna_ble"
-
-CONF_DEVICE_TYPE = "device_type"
-DEVICE_TYPE_ARTSAUNA = "artsauna"
-DEVICE_TYPE_KDY = "kdy"
-
-
-def device_type_for_name(name: str | None) -> str:
-    """Classify device type from advertised local name."""
-    if name and name.startswith("KDYSauna"):
-        return DEVICE_TYPE_KDY
-    return DEVICE_TYPE_ARTSAUNA
-

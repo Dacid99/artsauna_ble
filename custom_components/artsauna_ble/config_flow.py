@@ -31,25 +31,23 @@ from homeassistant.components.bluetooth import (
     BluetoothServiceInfoBleak,
     async_discovered_service_info,
 )
-from homeassistant.const import CONF_ADDRESS
-
+from homeassistant.const import CONF_ADDRESS, CONF_DEVICE_CLASS
+from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig, SelectSelectorMode
 from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import (
-    CONF_DEVICE_TYPE,
-    DEVICE_TYPE_KDY,
     DOMAIN,
-    device_type_for_name,
+    SaunaDeviceType,
 )
 from .kdy_ble import KdyBLEAdapter
 
 _LOGGER = logging.getLogger(__name__)
 
 
-def _create_adapter(discovery_info: BluetoothServiceInfoBleak):
+def _create_adapter_class(device_type: SaunaDeviceType):
     """Create the protocol adapter for a discovery result."""
-    if device_type_for_name(discovery_info.name) == DEVICE_TYPE_KDY:
-        return KdyBLEAdapter(discovery_info.device)
-    return ArtsaunaBLEAdapter(discovery_info.device)
+    if device_type == SaunaDeviceType.KDY:
+        return KdyBLEAdapter
+    return ArtsaunaBLEAdapter
 
 
 class ArtsaunaBLEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -86,12 +84,13 @@ class ArtsaunaBLEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             address = user_input[CONF_ADDRESS]
             discovery_info = self._discovered_devices[address]
             local_name = discovery_info.name
-            device_type = device_type_for_name(local_name)
             await self.async_set_unique_id(
                 discovery_info.address, raise_on_progress=False
             )
             self._abort_if_unique_id_configured()
-            adapter = _create_adapter(discovery_info)
+            device_type = user_input[CONF_DEVICE_CLASS]
+            adapter_class = _create_adapter_class(device_type)
+            adapter = adapter_class(discovery_info.device)
             try:
                 await adapter.initialise()
             except BLEAK_EXCEPTIONS:
@@ -105,7 +104,7 @@ class ArtsaunaBLEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     title=local_name,
                     data={
                         CONF_ADDRESS: discovery_info.address,
-                        CONF_DEVICE_TYPE: device_type,
+                        CONF_DEVICE_CLASS: device_type,
                     },
                 )
 
@@ -131,6 +130,11 @@ class ArtsaunaBLEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         service_info.address: f"{service_info.name} ({service_info.address})"
                         for service_info in self._discovered_devices.values()
                     }
+                ),
+                vol.Required(CONF_DEVICE_CLASS): SelectSelector(
+                    SelectSelectorConfig(
+                        options=[type.name for type in SaunaDeviceType], mode=SelectSelectorMode.DROPDOWN,
+                    ),
                 ),
             }
         )
