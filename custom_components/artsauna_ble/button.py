@@ -126,7 +126,6 @@ async def async_setup_entry(
             KdyBLEButton(data.coordinator, data.device, entry.title, description)
             for description in KDY_BUTTON_ENTITY_DESCRIPTIONS
         ]
-        async_add_entities(entities)
     else:
         entities = [
             ArtsaunaBLEButton(data.coordinator, data.device, entry.title, description)

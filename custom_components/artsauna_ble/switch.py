@@ -106,7 +106,6 @@ async def async_setup_entry(
             KdyBLESwitch(data.coordinator, data.device, entry.title, description)
             for description in KDY_SWITCH_ENTITY_DESCRIPTIONS
         ]
-        async_add_entities(entities)
     else:
         entities = [
             ArtsaunaBLESwitch(data.coordinator, data.device, entry.title, description)

@@ -86,7 +86,6 @@ async def async_setup_entry(
             KdyBLENumber(data.coordinator, data.device, entry.title, description)
             for description in KDY_SENSOR_DESCRIPTIONS
         ]
-        async_add_entities(entities)
     else:
         entities = [
             ArtsaunaBLENumber(data.coordinator, data.device, entry.title, description)
