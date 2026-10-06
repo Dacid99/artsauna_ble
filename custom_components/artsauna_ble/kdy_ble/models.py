@@ -41,10 +41,6 @@ from .const import (
 )
 
 
-class InvalidStatusPacket(ValueError):
-    """Raised when a payload is not a valid 22-byte AA…CC status frame."""
-
-
 def build_command_packet(byte_index: int, value: int) -> bytes:
     """Build a 22-byte AA…CC command packet with exactly one byte set."""
     if not 1 <= byte_index <= COMMAND_PACKET_LENGTH - 2:
@@ -87,12 +83,6 @@ class KdyState:
     def from_ble_status(cls, data: bytes | bytearray) -> KdyState:
         """Parse known fields from a status notification."""
         payload = bytes(data)
-        if not cls.is_status_frame(payload):
-            raise InvalidStatusPacket(
-                f"Expected {STATUS_PACKET_LENGTH}-byte AA…CC frame, "
-                f"got len={len(payload)} hex={payload.hex()}"
-            )
-
         return cls(
             power=payload[OFFSET_POWER] != 0,
             remaining_minutes=payload[OFFSET_REMAINING_MINUTES],

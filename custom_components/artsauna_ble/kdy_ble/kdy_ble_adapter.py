@@ -170,25 +170,24 @@ class KdyBLEAdapter:
         raw_hex = bytes(data).hex()
         _LOGGER.debug("%s: RAW notification %s: %s", self.name, char_uuid, raw_hex)
 
-        try:
+        if KdyState.is_status_frame(data):
             new_state = KdyState.from_ble_status(data)
-        except InvalidStatusPacket:
+
+            self._state = new_state
+            _LOGGER.debug(
+                "%s: Decoded status: %s | RAW: %s",
+                self.name,
+                new_state.format_known_fields(),
+                raw_hex,
+            )
+            self._fire_callbacks()
+        else:
             _LOGGER.debug(
                 "%s: Non-status or invalid %s payload: %s",
                 self.name,
                 char_uuid,
                 raw_hex,
             )
-            return
-
-        self._state = new_state
-        _LOGGER.debug(
-            "%s: Decoded status: %s | RAW: %s",
-            self.name,
-            new_state.format_known_fields(),
-            raw_hex,
-        )
-        self._fire_callbacks()
 
     async def _ensure_connected(self) -> None:
         """Ensure connection to device is established."""
