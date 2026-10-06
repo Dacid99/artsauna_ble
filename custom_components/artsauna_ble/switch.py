@@ -76,7 +76,7 @@ UNIT_DESCRIPTION = SwitchEntityDescription(
     translation_key="unit",
 )
 
-SWITCH_ENTITY_DESCRIPTIONS = [
+ARTSAUNA_SWITCH_ENTITY_DESCRIPTIONS = [
     POWER_DESCRIPTION,
     HEATING_DESCRIPTION,
     BT_DESCRIPTION,
@@ -109,7 +109,7 @@ async def async_setup_entry(
         else:
             entities = [
                 ArtsaunaBLESwitch(data.coordinator, data.device, entry.title, description)
-                for description in SWITCH_ENTITY_DESCRIPTIONS
+                for description in ARTSAUNA_SWITCH_ENTITY_DESCRIPTIONS
             ]
         async_add_entities(entities)
 

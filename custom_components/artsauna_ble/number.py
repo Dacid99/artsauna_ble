@@ -43,7 +43,7 @@ from .models import ArtsaunaBLEData
 
 _LOGGER = logging.getLogger(__name__)
 
-VOLUME_DESCRIPTION = NumberEntityDescription(
+ARTSAUNA_VOLUME_DESCRIPTION = NumberEntityDescription(
     key="volume",
     translation_key="volume",
     entity_category=EntityCategory.CONFIG,
@@ -64,8 +64,8 @@ KDY_VOLUME_DESCRIPTION = NumberEntityDescription(
     native_step=1,
 )
 
-SENSOR_DESCRIPTIONS = [
-    VOLUME_DESCRIPTION,
+ARTSAUNA_SENSOR_DESCRIPTIONS = [
+    ARTSAUNA_VOLUME_DESCRIPTION,
 ]
 
 KDY_SENSOR_DESCRIPTIONS = [
@@ -89,7 +89,7 @@ async def async_setup_entry(
         else:
             entities = [
                 ArtsaunaBLENumber(data.coordinator, data.device, entry.title, description)
-                for description in SENSOR_DESCRIPTIONS
+                for description in ARTSAUNA_SENSOR_DESCRIPTIONS
             ]
         async_add_entities(entities)
 

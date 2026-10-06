@@ -92,7 +92,7 @@ TOGGLE_AUDIO_SOURCE_DESCRIPTION = ButtonEntityDescription(
     icon="mdi:bluetooth-audio",
 )
 
-BUTTON_ENTITY_DESCRIPTIONS = [
+ARTSAUNA_BUTTON_ENTITY_DESCRIPTIONS = [
     TEMP_UP_DESCRIPTION,
     TEMP_DOWN_DESCRIPTION,
     TIME_UP_DESCRIPTION,
@@ -129,7 +129,7 @@ async def async_setup_entry(
         else:
             entities = [
                 ArtsaunaBLEButton(data.coordinator, data.device, entry.title, description)
-                for description in BUTTON_ENTITY_DESCRIPTIONS
+                for description in ARTSAUNA_BUTTON_ENTITY_DESCRIPTIONS
             ]
         async_add_entities(entities)
 
