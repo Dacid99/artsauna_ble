@@ -10,6 +10,7 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
+    CONF_DEVICE_CLASS,
     EntityCategory,
     UnitOfFrequency,
     UnitOfTemperature,
@@ -26,9 +27,7 @@ from custom_components.artsauna_ble.artsauna_ble.const import INTERNAL_RGB_COLOR
 
 from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import (
-    CONF_DEVICE_TYPE,
-    DEVICE_TYPE_ARTSAUNA,
-    DEVICE_TYPE_KDY,
+    SaunaDeviceType,
     DOMAIN,
 )
 from .coordinator import ArtsaunaBLECoordinator
@@ -100,16 +99,14 @@ async def async_setup_entry(
 ) -> None:
     """Set up the sensor platform."""
     data: ArtsaunaBLEData = hass.data[DOMAIN][entry.entry_id]
-    device_type = entry.data.get(CONF_DEVICE_TYPE, DEVICE_TYPE_ARTSAUNA)
 
-    if device_type == DEVICE_TYPE_KDY:
-        assert isinstance(data.device, KdyBLEAdapter)
+    if entry.data.get(CONF_DEVICE_CLASS) == SaunaDeviceType.KDY:
         entities = [
             KdyBLESensor(data.coordinator, data.device, entry.title, description)
             for description in KDY_SENSOR_DESCRIPTIONS
         ]
+        async_add_entities(entities)
     else:
-        assert isinstance(data.device, ArtsaunaBLEAdapter)
         entities = [
             ArtsaunaBLESensor(data.coordinator, data.device, entry.title, description)
             for description in ARTSAUNA_SENSOR_DESCRIPTIONS

@@ -33,21 +33,14 @@ from homeassistant.components.bluetooth import (
 )
 from homeassistant.const import CONF_ADDRESS, CONF_DEVICE_CLASS
 from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig, SelectSelectorMode
-from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import (
     DOMAIN,
     SaunaDeviceType,
 )
-from .kdy_ble import KdyBLEAdapter
-
+from . import get_adapter_class
 _LOGGER = logging.getLogger(__name__)
 
 
-def _create_adapter_class(device_type: SaunaDeviceType):
-    """Create the protocol adapter for a discovery result."""
-    if device_type == SaunaDeviceType.KDY:
-        return KdyBLEAdapter
-    return ArtsaunaBLEAdapter
 
 
 class ArtsaunaBLEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -89,7 +82,7 @@ class ArtsaunaBLEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
             self._abort_if_unique_id_configured()
             device_type = user_input[CONF_DEVICE_CLASS]
-            adapter_class = _create_adapter_class(device_type)
+            adapter_class = get_adapter_class(device_type)
             adapter = adapter_class(discovery_info.device)
             try:
                 await adapter.initialise()

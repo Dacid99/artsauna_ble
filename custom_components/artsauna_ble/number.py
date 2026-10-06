@@ -27,7 +27,7 @@ from homeassistant.components.number import (
     NumberMode,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import EntityCategory
+from homeassistant.const import CONF_DEVICE_CLASS, EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import device_registry
 from homeassistant.helpers.device_registry import DeviceInfo
@@ -36,7 +36,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from propcache.api import cached_property
 
 from .artsauna_ble import ArtsaunaBLEAdapter
-from .const import CONF_DEVICE_TYPE, DEVICE_TYPE_ARTSAUNA, DEVICE_TYPE_KDY, DOMAIN
+from .const import SaunaDeviceType, DOMAIN
 from .coordinator import ArtsaunaBLECoordinator
 from .kdy_ble import KdyBLEAdapter
 from .models import ArtsaunaBLEData
@@ -81,29 +81,19 @@ async def async_setup_entry(
     """Set up the platform for ArtsaunaBLE."""
     data: ArtsaunaBLEData = hass.data[DOMAIN][entry.entry_id]
 
-    if entry.data.get(CONF_DEVICE_TYPE, DEVICE_TYPE_ARTSAUNA) == DEVICE_TYPE_KDY:
-        assert isinstance(data.device, KdyBLEAdapter)
-        async_add_entities(
-            KdyBLENumber(
-                data.coordinator,
-                data.device,
-                entry.title,
-                description,
-            )
+    if entry.data.get(CONF_DEVICE_CLASS) == SaunaDeviceType.KDY:
+        entities = [
+            KdyBLENumber(data.coordinator, data.device, entry.title, description)
             for description in KDY_SENSOR_DESCRIPTIONS
-        )
-        return
+        ]
+        async_add_entities(entities)
+    else:
+        entities = [
+            ArtsaunaBLENumber(data.coordinator, data.device, entry.title, description)
+            for description in SENSOR_DESCRIPTIONS
+        ]
 
-    assert isinstance(data.device, ArtsaunaBLEAdapter)
-    async_add_entities(
-        ArtsaunaBLENumber(
-            data.coordinator,
-            data.device,
-            entry.title,
-            description,
-        )
-        for description in SENSOR_DESCRIPTIONS
-    )
+    async_add_entities(entities)
 
 
 class ArtsaunaBLENumber(CoordinatorEntity[ArtsaunaBLECoordinator], NumberEntity):

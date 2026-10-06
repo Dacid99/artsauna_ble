@@ -26,7 +26,7 @@ from homeassistant.components.button import (
     ButtonEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import EntityCategory, UnitOfTemperature, UnitOfTime
+from homeassistant.const import CONF_DEVICE_CLASS, EntityCategory, UnitOfTemperature, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry
 from homeassistant.helpers.device_registry import DeviceInfo
@@ -34,7 +34,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .artsauna_ble import ArtsaunaBLEAdapter
-from .const import CONF_DEVICE_TYPE, DEVICE_TYPE_ARTSAUNA, DEVICE_TYPE_KDY, DOMAIN
+from .const import SaunaDeviceType, DOMAIN
 from .coordinator import ArtsaunaBLECoordinator
 from .kdy_ble import KdyBLEAdapter
 from .models import ArtsaunaBLEData
@@ -121,21 +121,17 @@ async def async_setup_entry(
     """Set up the platform for ArtsaunaBLE."""
     data: ArtsaunaBLEData = hass.data[DOMAIN][entry.entry_id]
 
-    if entry.data.get(CONF_DEVICE_TYPE, DEVICE_TYPE_ARTSAUNA) == DEVICE_TYPE_KDY:
-        assert isinstance(data.device, KdyBLEAdapter)
+    if entry.data.get(CONF_DEVICE_CLASS) == SaunaDeviceType.KDY:
         entities = [
             KdyBLEButton(data.coordinator, data.device, entry.title, description)
             for description in KDY_BUTTON_ENTITY_DESCRIPTIONS
         ]
         async_add_entities(entities)
-        return
-
-    assert isinstance(data.device, ArtsaunaBLEAdapter)
-
-    entities = [
-        ArtsaunaBLEButton(data.coordinator, data.device, entry.title, description)
-        for description in BUTTON_ENTITY_DESCRIPTIONS
-    ]
+    else:
+        entities = [
+            ArtsaunaBLEButton(data.coordinator, data.device, entry.title, description)
+            for description in BUTTON_ENTITY_DESCRIPTIONS
+        ]
 
     async_add_entities(entities)
 
