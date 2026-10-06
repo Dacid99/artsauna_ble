@@ -28,7 +28,7 @@ from custom_components.artsauna_ble.artsauna_ble.const import INTERNAL_RGB_COLOR
 from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import (
     SaunaDeviceType,
-    DOMAIN,
+    HASS_DOMAIN,
 )
 from .coordinator import ArtsaunaBLECoordinator
 from .kdy_ble import KdyBLEAdapter
@@ -98,7 +98,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the sensor platform."""
-    data: ArtsaunaBLEData = hass.data[DOMAIN][entry.entry_id]
+    data: ArtsaunaBLEData = hass.data[HASS_DOMAIN][entry.entry_id]
 
     if entry.data.get(CONF_DEVICE_CLASS) == SaunaDeviceType.KDY:
         entities = [

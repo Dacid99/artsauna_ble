@@ -27,7 +27,7 @@ from homeassistant.helpers.event import async_call_later
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .artsauna_ble import ArtsaunaBLEAdapter
-from .const import DOMAIN
+from .const import HASS_DOMAIN
 from .kdy_ble import KdyBLEAdapter
 
 _LOGGER = logging.getLogger(__name__)
@@ -46,7 +46,7 @@ class ArtsaunaBLECoordinator(DataUpdateCoordinator[None]):
         super().__init__(
             hass,
             _LOGGER,
-            name=DOMAIN,
+            name=HASS_DOMAIN,
         )
         self._adapter = adapter
         adapter.register_callback(self._async_handle_update)

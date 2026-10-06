@@ -23,4 +23,4 @@ class SaunaDeviceType(Enum):
     ARTSAUNA = "artsauna"
     KDY = "kdy"
 
-DOMAIN = "artsauna_ble"
+HASS_DOMAIN = "artsauna_ble"

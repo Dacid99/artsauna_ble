@@ -35,7 +35,7 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from .artsauna_ble import ArtsaunaBLEAdapter
 from .const import (
     SaunaDeviceType,
-    DOMAIN,
+    HASS_DOMAIN,
 )
 from .coordinator import ArtsaunaBLECoordinator
 from .kdy_ble import KdyBLEAdapter
@@ -104,7 +104,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         )
     )
 
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = ArtsaunaBLEData(
+    hass.data.setdefault(HASS_DOMAIN, {})[entry.entry_id] = ArtsaunaBLEData(
         entry.title, adapter, coordinator
     )
 
@@ -123,7 +123,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def _async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Handle options update."""
-    data: ArtsaunaBLEData = hass.data[DOMAIN][entry.entry_id]
+    data: ArtsaunaBLEData = hass.data[HASS_DOMAIN][entry.entry_id]
     if entry.title != data.title:
         await hass.config_entries.async_reload(entry.entry_id)
 
@@ -131,7 +131,7 @@ async def _async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> Non
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
-        data: ArtsaunaBLEData = hass.data[DOMAIN].pop(entry.entry_id)
+        data: ArtsaunaBLEData = hass.data[HASS_DOMAIN].pop(entry.entry_id)
         await data.device.stop()
 
     return unload_ok
