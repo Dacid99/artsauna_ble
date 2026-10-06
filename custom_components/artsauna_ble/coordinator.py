@@ -26,8 +26,9 @@ from homeassistant.core import CALLBACK_TYPE, HassJob, HomeAssistant, callback
 from homeassistant.helpers.event import async_call_later
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
-from .artsauna_ble import ArtsaunaBLEAdapter, ArtsaunaState
-from .const import DOMAIN
+from .artsauna_ble import ArtsaunaBLEAdapter
+from .const import HASS_DOMAIN
+from .kdy_ble import KdyBLEAdapter
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -36,24 +37,26 @@ DEBOUNCE_SECONDS = 1.0
 
 
 class ArtsaunaBLECoordinator(DataUpdateCoordinator[None]):
-    """Data coordinator for receiving Artsauna updates."""
+    """Data coordinator for receiving sauna BLE updates."""
 
-    def __init__(self, hass: HomeAssistant, artsauna_ble: ArtsaunaBLEAdapter) -> None:
+    def __init__(
+        self, hass: HomeAssistant, adapter: ArtsaunaBLEAdapter | KdyBLEAdapter
+    ) -> None:
         """Initialise the coordinator."""
         super().__init__(
             hass,
             _LOGGER,
-            name=DOMAIN,
+            name=HASS_DOMAIN,
         )
-        self._artsauna_ble = artsauna_ble
-        artsauna_ble.register_callback(self._async_handle_update)
-        artsauna_ble.register_disconnected_callback(self._async_handle_disconnect)
+        self._adapter = adapter
+        adapter.register_callback(self._async_handle_update)
+        adapter.register_disconnected_callback(self._async_handle_disconnect)
         self.connected = False
         self._last_update_time = NEVER_TIME
         self._debounce_cancel: CALLBACK_TYPE | None = None
         self._debounced_update_job = HassJob(
             self._async_handle_debounced_update,
-            f"LD2450 {artsauna_ble.address} BLE debounced update",
+            f"LD2450 {adapter.address} BLE debounced update",
         )
 
     @callback
@@ -64,7 +67,7 @@ class ArtsaunaBLECoordinator(DataUpdateCoordinator[None]):
         self.async_set_updated_data(None)
 
     @callback
-    def _async_handle_update(self, state: ArtsaunaState) -> None:
+    def _async_handle_update(self, _state: object) -> None:
         """Just trigger the callbacks."""
         self.connected = True
         previous_last_updated_time = self._last_update_time

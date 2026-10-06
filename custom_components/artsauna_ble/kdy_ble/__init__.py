@@ -16,21 +16,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-"""The Artsauna-BLE integration models."""
+"""KDY Sauna BLE protocol package."""
 
-from __future__ import annotations
+from .kdy_ble_adapter import KdyBLEAdapter
+from .models import KdyState
 
-from dataclasses import dataclass
-
-from .artsauna_ble import ArtsaunaBLEAdapter
-from .coordinator import ArtsaunaBLECoordinator
-from .kdy_ble import KdyBLEAdapter
-
-
-@dataclass
-class ArtsaunaBLEData:
-    """Data for the artsauna ble integration."""
-
-    title: str
-    device: ArtsaunaBLEAdapter | KdyBLEAdapter
-    coordinator: ArtsaunaBLECoordinator
+__all__ = ["KdyBLEAdapter", "KdyState"]

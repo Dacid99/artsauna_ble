@@ -1,4 +1,4 @@
-"""LD2450 BLE integration sensor platform."""
+"""Sauna BLE integration sensor platform."""
 
 import logging
 
@@ -25,8 +25,11 @@ from propcache.api import cached_property
 from custom_components.artsauna_ble.artsauna_ble.const import INTERNAL_RGB_COLOR_MAP
 
 from .artsauna_ble import ArtsaunaBLEAdapter
-from .const import DOMAIN
+from .const import (
+    HASS_DOMAIN,
+)
 from .coordinator import ArtsaunaBLECoordinator
+from .kdy_ble import KdyBLEAdapter
 from .models import ArtsaunaBLEData
 
 _LOGGER = logging.getLogger(__name__)
@@ -65,13 +68,25 @@ RGB_MODE_DESCRIPTION = SensorEntityDescription(
     translation_key="rgb_mode",
     icon="mdi:palette",
 )
+POWER_DESCRIPTION = SensorEntityDescription(
+    key="power",
+    translation_key="power",
+    icon="mdi:power",
+)
 
-BUTTON_ENTITY_DESCRIPTIONS = [
+ARTSAUNA_SENSOR_DESCRIPTIONS = [
     TARGET_TEMP_DESCRIPTION,
     CURRENT_TEMP_DESCRIPTION,
     REMAINING_TIME_DESCRIPTION,
     FM_FREQUENCY_DESCRIPTION,
     RGB_MODE_DESCRIPTION,
+]
+
+KDY_SENSOR_DESCRIPTIONS = [
+    POWER_DESCRIPTION,
+    TARGET_TEMP_DESCRIPTION,
+    CURRENT_TEMP_DESCRIPTION,
+    REMAINING_TIME_DESCRIPTION,
 ]
 
 
@@ -80,19 +95,24 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up the platform for ArtsaunaBLE."""
-    data: ArtsaunaBLEData = hass.data[DOMAIN][entry.entry_id]
-
-    entities = [
-        ArtsaunaBLESensor(data.coordinator, data.device, entry.title, description)
-        for description in BUTTON_ENTITY_DESCRIPTIONS
-    ]
-
-    async_add_entities(entities)
+    """Set up the sensor platform."""
+    data: ArtsaunaBLEData = hass.data[HASS_DOMAIN][entry.entry_id]
+    if data and data.device:
+        if isinstance(data.device, KdyBLEAdapter):
+            entities = [
+                KdyBLESensor(data.coordinator, data.device, entry.title, description)
+                for description in KDY_SENSOR_DESCRIPTIONS
+            ]
+        else:
+            entities = [
+                ArtsaunaBLESensor(data.coordinator, data.device, entry.title, description)
+                for description in ARTSAUNA_SENSOR_DESCRIPTIONS
+            ]
+        async_add_entities(entities)
 
 
 class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity):
-    """Generic base button for ArtsaunaBLE."""
+    """Sensor for Artsauna BLE devices."""
 
     _attr_has_entity_name = True
     _attr_entity_category = EntityCategory.DIAGNOSTIC
@@ -160,6 +180,77 @@ class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity)
             except KeyError:
                 return None
         return super().native_value
+
+    @cached_property
+    def native_unit_of_measurement(self) -> str | None:
+        if self._key in ["current_temp", "target_temp"]:
+            return (
+                UnitOfTemperature.CELSIUS
+                if self._device.is_unit_celsius
+                else UnitOfTemperature.FAHRENHEIT
+            )
+        return super().native_unit_of_measurement
+
+
+class KdyBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity):
+    """Sensor for KDY Sauna BLE devices."""
+
+    _attr_has_entity_name = True
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_entity_registry_enabled_default = True
+    _attr_entity_registry_visible_default = True
+
+    def __init__(
+        self,
+        coordinator: ArtsaunaBLECoordinator,
+        device: KdyBLEAdapter,
+        name: str,
+        description: SensorEntityDescription,
+    ) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator)
+        self._coordinator = coordinator
+        self.entity_description = description
+        self._key = description.key
+        self._device = device
+        self._attr_unique_id = f"{device.address}_{self._key}"
+        self._attr_device_info = DeviceInfo(
+            name=name,
+            connections={(device_registry.CONNECTION_BLUETOOTH, device.address)},
+            manufacturer="KDY",
+            model="KDYSauna",
+        )
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        match self._key:
+            case "power":
+                self._attr_native_value = "on" if self._device.is_power_on else "off"
+            case "remaining_time":
+                self._attr_native_value = self._device.remaining_time
+            case "target_temp":
+                self._attr_native_value = self._device.target_temp
+                self._sensor_option_unit_of_measurement = (
+                    UnitOfTemperature.CELSIUS
+                    if self._device.is_unit_celsius
+                    else UnitOfTemperature.FAHRENHEIT
+                )
+            case "current_temp":
+                self._attr_native_value = self._device.current_temp
+                self._sensor_option_unit_of_measurement = (
+                    UnitOfTemperature.CELSIUS
+                    if self._device.is_unit_celsius
+                    else UnitOfTemperature.FAHRENHEIT
+                )
+            case _:
+                _LOGGER.error("Wrong KEY for KDY sensor: %s", self._key)
+                return
+        self.async_write_ha_state()
+
+    @property
+    def available(self) -> bool:
+        return super().available and self._coordinator.connected
 
     @cached_property
     def native_unit_of_measurement(self) -> str | None:

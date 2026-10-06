@@ -38,6 +38,15 @@
       },
       "cycle_rgb": {
         "name": "RGB durchschalten"
+      },
+      "external_light": {
+        "name": "Außenlicht"
+      },
+      "internal_light": {
+        "name": "Innenlicht"
+      },
+      "toggle_audio_source": {
+        "name": "BT/USB Quelle wechseln"
       }
     },
     "switch": {
@@ -83,6 +92,9 @@
       },
       "rgb_mode": {
         "name": "RGB Farbmodus"
+      },
+      "power": {
+        "name": "Betrieb"
       }
     }
   }

@@ -36,13 +36,14 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from propcache.api import cached_property
 
 from .artsauna_ble import ArtsaunaBLEAdapter
-from .const import DOMAIN
+from .const import HASS_DOMAIN
 from .coordinator import ArtsaunaBLECoordinator
+from .kdy_ble import KdyBLEAdapter
 from .models import ArtsaunaBLEData
 
 _LOGGER = logging.getLogger(__name__)
 
-VOLUME_DESCRIPTION = NumberEntityDescription(
+ARTSAUNA_VOLUME_DESCRIPTION = NumberEntityDescription(
     key="volume",
     translation_key="volume",
     entity_category=EntityCategory.CONFIG,
@@ -52,9 +53,23 @@ VOLUME_DESCRIPTION = NumberEntityDescription(
     native_max_value=40,
     native_step=1,
 )
+KDY_VOLUME_DESCRIPTION = NumberEntityDescription(
+    key="volume",
+    translation_key="volume",
+    entity_category=EntityCategory.CONFIG,
+    device_class=NumberDeviceClass.SOUND_PRESSURE,
+    mode=NumberMode.SLIDER,
+    native_min_value=1,
+    native_max_value=20,
+    native_step=1,
+)
 
-SENSOR_DESCRIPTIONS = [
-    VOLUME_DESCRIPTION,
+ARTSAUNA_SENSOR_DESCRIPTIONS = [
+    ARTSAUNA_VOLUME_DESCRIPTION,
+]
+
+KDY_SENSOR_DESCRIPTIONS = [
+    KDY_VOLUME_DESCRIPTION,
 ]
 
 
@@ -64,16 +79,19 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the platform for ArtsaunaBLE."""
-    data: ArtsaunaBLEData = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities(
-        ArtsaunaBLENumber(
-            data.coordinator,
-            data.device,
-            entry.title,
-            description,
-        )
-        for description in SENSOR_DESCRIPTIONS
-    )
+    data: ArtsaunaBLEData = hass.data[HASS_DOMAIN][entry.entry_id]
+    if data and data.device:
+        if isinstance(data.device, KdyBLEAdapter):
+            entities = [
+                KdyBLENumber(data.coordinator, data.device, entry.title, description)
+                for description in KDY_SENSOR_DESCRIPTIONS
+            ]
+        else:
+            entities = [
+                ArtsaunaBLENumber(data.coordinator, data.device, entry.title, description)
+                for description in ARTSAUNA_SENSOR_DESCRIPTIONS
+            ]
+        async_add_entities(entities)
 
 
 class ArtsaunaBLENumber(CoordinatorEntity[ArtsaunaBLECoordinator], NumberEntity):
@@ -139,4 +157,69 @@ class ArtsaunaBLENumber(CoordinatorEntity[ArtsaunaBLECoordinator], NumberEntity)
                     return "mdi:volume-medium"
                 if self._attr_native_value <= 50:
                     return "mdi:volume-high"
+        return super().icon
+
+
+class KdyBLENumber(CoordinatorEntity[ArtsaunaBLECoordinator], NumberEntity):
+    """Number for KDY Sauna BLE devices."""
+
+    _attr_has_entity_name = True
+    _attr_entity_registry_enabled_default = True
+    _attr_entity_registry_visible_default = True
+
+    def __init__(
+        self,
+        coordinator: ArtsaunaBLECoordinator,
+        device: KdyBLEAdapter,
+        name: str,
+        description: NumberEntityDescription,
+    ) -> None:
+        """Initialize the number."""
+        super().__init__(coordinator)
+        self._coordinator = coordinator
+        self._device = device
+        self.entity_description = description
+        self._key = description.key
+        self._attr_unique_id = f"{device.address}_{self._key}"
+        self._attr_device_info = DeviceInfo(
+            name=name,
+            connections={(device_registry.CONNECTION_BLUETOOTH, device.address)},
+            manufacturer="KDY",
+            model="KDYSauna",
+        )
+        self._attr_native_value = 1
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        match self._key:
+            case "volume":
+                self._attr_native_value = self._device.volume
+            case _:
+                _LOGGER.error("Wrong KEY for KDY number: %s", self._key)
+        self.async_write_ha_state()
+
+    async def async_set_native_value(self, value: float) -> None:
+        """Update the current value."""
+        match self._key:
+            case "volume":
+                await self._device.send_set_volume(int(value))
+            case _:
+                _LOGGER.error("Wrong KEY for KDY number: %s", self._key)
+
+    @property
+    def available(self) -> bool:
+        return super().available and self._device.is_power_on
+
+    @cached_property
+    def icon(self) -> str | None:
+        match self._key:
+            case "volume":
+                if not self._attr_native_value:
+                    return "mdi:volume-off"
+                if self._attr_native_value <= 7:
+                    return "mdi:volume-low"
+                if self._attr_native_value <= 14:
+                    return "mdi:volume-medium"
+                return "mdi:volume-high"
         return super().icon

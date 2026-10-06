@@ -31,15 +31,19 @@ from homeassistant.components.bluetooth import (
     BluetoothServiceInfoBleak,
     async_discovered_service_info,
 )
-from homeassistant.const import CONF_ADDRESS
-
-from .artsauna_ble import ArtsaunaBLEAdapter
-from .const import DOMAIN
-
+from homeassistant.const import CONF_ADDRESS, CONF_DEVICE_CLASS
+from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig, SelectSelectorMode
+from .const import (
+    HASS_DOMAIN,
+    SaunaDeviceType,
+)
+from . import get_adapter_class
 _LOGGER = logging.getLogger(__name__)
 
 
-class ArtsaunaBLEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+
+
+class ArtsaunaBLEConfigFlow(config_entries.ConfigFlow, domain=HASS_DOMAIN):
     """Handle a config flow for artsauna BLE."""
 
     VERSION = 1
@@ -77,20 +81,23 @@ class ArtsaunaBLEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 discovery_info.address, raise_on_progress=False
             )
             self._abort_if_unique_id_configured()
-            artsauna_ble = ArtsaunaBLEAdapter(discovery_info.device)
+            device_type = user_input[CONF_DEVICE_CLASS]
+            adapter_class = get_adapter_class(device_type)
+            adapter = adapter_class(discovery_info.device)
             try:
-                await artsauna_ble.initialise()
+                await adapter.initialise()
             except BLEAK_EXCEPTIONS:
                 errors["base"] = "cannot_connect"
             except Exception:  # pylint: disable=broad-except
                 _LOGGER.exception("Unexpected error")
                 errors["base"] = "unknown"
             else:
-                await artsauna_ble.stop()
+                await adapter.stop()
                 return self.async_create_entry(
                     title=local_name,
                     data={
                         CONF_ADDRESS: discovery_info.address,
+                        CONF_DEVICE_CLASS: device_type,
                     },
                 )
 
@@ -116,6 +123,11 @@ class ArtsaunaBLEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         service_info.address: f"{service_info.name} ({service_info.address})"
                         for service_info in self._discovered_devices.values()
                     }
+                ),
+                vol.Required(CONF_DEVICE_CLASS): SelectSelector(
+                    SelectSelectorConfig(
+                        options=[type.name for type in SaunaDeviceType], mode=SelectSelectorMode.DROPDOWN,
+                    ),
                 ),
             }
         )

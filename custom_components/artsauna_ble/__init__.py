@@ -28,24 +28,34 @@ from bleak_retry_connector import (
 from homeassistant.components import bluetooth
 from homeassistant.components.bluetooth.match import ADDRESS, BluetoothCallbackMatcher
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ADDRESS, EVENT_HOMEASSISTANT_STOP, Platform
+from homeassistant.const import CONF_ADDRESS, CONF_DEVICE_CLASS, EVENT_HOMEASSISTANT_STOP, Platform
 from homeassistant.core import Event, HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryNotReady
 
 from .artsauna_ble import ArtsaunaBLEAdapter
-from .const import DOMAIN
+from .const import (
+    SaunaDeviceType,
+    HASS_DOMAIN,
+)
 from .coordinator import ArtsaunaBLECoordinator
+from .kdy_ble import KdyBLEAdapter
 from .models import ArtsaunaBLEData
 
 PLATFORMS: list[Platform] = [
     Platform.SENSOR,
     Platform.SWITCH,
-    # Platform.SELECT,
     Platform.BUTTON,
     Platform.NUMBER,
 ]
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def get_adapter_class(device_type: SaunaDeviceType):
+    """Create the protocol adapter for a discovery result."""
+    if device_type == SaunaDeviceType.KDY:
+        return KdyBLEAdapter
+    return ArtsaunaBLEAdapter
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -59,18 +69,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     ) or await get_device(address)
     if not ble_device:
         raise ConfigEntryNotReady(
-            f"Could not find Artsauna device with address {address}"
+            f"Could not find sauna device with address {address}"
         )
 
-    artsauna_ble = ArtsaunaBLEAdapter(ble_device)
+    device_type = entry.data[CONF_DEVICE_CLASS]
+    adapter_class = get_adapter_class(device_type)
+    adapter = adapter_class(ble_device)
 
-    coordinator = ArtsaunaBLECoordinator(hass, artsauna_ble)
+    coordinator = ArtsaunaBLECoordinator(hass, adapter)
 
     try:
-        await artsauna_ble.initialise()
+        await adapter.initialise()
     except BleakError as exc:
         raise ConfigEntryNotReady(
-            f"Could not initialise Artsauna device with address {address}"
+            f"Could not initialise sauna device with address {address}"
         ) from exc
 
     @callback
@@ -79,7 +91,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         change: bluetooth.BluetoothChange,
     ) -> None:
         """Update from a ble callback."""
-        artsauna_ble.set_ble_device_and_advertisement_data(
+        adapter.set_ble_device_and_advertisement_data(
             service_info.device, service_info.advertisement
         )
 
@@ -92,8 +104,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         )
     )
 
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = ArtsaunaBLEData(
-        entry.title, artsauna_ble, coordinator
+    hass.data.setdefault(HASS_DOMAIN, {})[entry.entry_id] = ArtsaunaBLEData(
+        entry.title, adapter, coordinator
     )
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
@@ -101,7 +113,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     async def _async_stop(event: Event) -> None:
         """Close the connection."""
-        await artsauna_ble.stop()
+        await adapter.stop()
 
     entry.async_on_unload(
         hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STOP, _async_stop)
@@ -111,7 +123,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def _async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Handle options update."""
-    data: ArtsaunaBLEData = hass.data[DOMAIN][entry.entry_id]
+    data: ArtsaunaBLEData = hass.data[HASS_DOMAIN][entry.entry_id]
     if entry.title != data.title:
         await hass.config_entries.async_reload(entry.entry_id)
 
@@ -119,7 +131,7 @@ async def _async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> Non
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
-        data: ArtsaunaBLEData = hass.data[DOMAIN].pop(entry.entry_id)
+        data: ArtsaunaBLEData = hass.data[HASS_DOMAIN].pop(entry.entry_id)
         await data.device.stop()
 
     return unload_ok
