@@ -5,18 +5,17 @@
 [![Downloads](https://img.shields.io/github/downloads/Dacid99/artsauna_ble/total)](https://github.com/Dacid99/artsauna_ble/releases)
 [![Translation status](https://hosted.weblate.org/widget/artsauna_ble/svg-badge.svg)](https://hosted.weblate.org/engage/artsauna_ble/)
 
-This free and open-source integration allows you to control your Artsauna Device via HomeAssistant, and to observe KDY Sauna devices over BLE.
+This free and open-source integration allows you to control Artsauna and KDY sauna devices via Home Assistant over Bluetooth Low Energy.
 
-It has been developed for and tested with an Artsauna Infrared Cabin Type Oslo.
-
-The Artsauna controller used is marked as CS-128 and is most likely manufactured by china-based HiMaterial.
+[Artsauna](https://www.artsauna.de/) is a German company that sells infrared cabins and saunas. Artsauna uses the same model designations (such as Infrared Cabin Type Oslo) across different underlying manufacturers. Both protocols in this integration were tested with an Artsauna Infrared Cabin Type Oslo: the original Artsauna/HiMaterial CS-128 path, and a newer cabin that uses a KDY controller.
+KDY is a Chinese sauna manufacturer.
 
 ## Supported devices
 
-| Brand / device               | Discovery name | Status                  | Protocol                                     |
-| ----------------------------- | -------------- | ----------------------- | --------------------------------------------- |
-| Artsauna (HiMaterial CS-128) | `SAUNA*`       | Full control (existing) | —                                             |
-| KDY Sauna                    | `KDYSauna*`    | Full control            | [docs/kdy-protocol.md](docs/kdy-protocol.md) |
+| Brand / device               | Discovery name | Status       | Protocol                                     |
+| ----------------------------- | -------------- | ------------ | -------------------------------------------- |
+| Artsauna (HiMaterial CS-128) | `SAUNA*`       | Full control | —                                            |
+| KDY Sauna (newer Oslo cabin) | `KDYSauna*`    | Full control | [docs/kdy-protocol.md](docs/kdy-protocol.md) |
 
 ## Features
 
