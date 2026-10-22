@@ -126,7 +126,11 @@ class ArtsaunaBLEConfigFlow(config_entries.ConfigFlow, domain=HASS_DOMAIN):
                 ),
                 vol.Required(CONF_DEVICE_CLASS): SelectSelector(
                     SelectSelectorConfig(
-                        options=[type.name for type in SaunaDeviceType], mode=SelectSelectorMode.DROPDOWN,
+                        options=[
+                            {"value": device_type.value, "label": device_type.name}
+                            for device_type in SaunaDeviceType
+                        ],
+                        mode=SelectSelectorMode.DROPDOWN,
                     ),
                 ),
             }

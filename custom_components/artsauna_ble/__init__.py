@@ -51,9 +51,9 @@ PLATFORMS: list[Platform] = [
 _LOGGER = logging.getLogger(__name__)
 
 
-def get_adapter_class(device_type: SaunaDeviceType):
+def get_adapter_class(device_type: str) -> type[ArtsaunaBLEAdapter] | type[KdyBLEAdapter]:
     """Create the protocol adapter for a discovery result."""
-    if device_type == SaunaDeviceType.KDY:
+    if SaunaDeviceType(device_type.lower()) == SaunaDeviceType.KDY:
         return KdyBLEAdapter
     return ArtsaunaBLEAdapter
 
@@ -72,7 +72,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             f"Could not find sauna device with address {address}"
         )
 
-    device_type = entry.data[CONF_DEVICE_CLASS]
+    device_type = entry.data.get(CONF_DEVICE_CLASS, SaunaDeviceType.ARTSAUNA.value)
     adapter_class = get_adapter_class(device_type)
     adapter = adapter_class(ble_device)
 

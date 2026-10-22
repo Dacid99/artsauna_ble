@@ -56,7 +56,7 @@ class ArtsaunaBLECoordinator(DataUpdateCoordinator[None]):
         self._debounce_cancel: CALLBACK_TYPE | None = None
         self._debounced_update_job = HassJob(
             self._async_handle_debounced_update,
-            f"LD2450 {adapter.address} BLE debounced update",
+            f"Sauna {adapter.address} BLE debounced update",
         )
 
     @callback
