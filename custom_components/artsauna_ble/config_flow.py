@@ -32,15 +32,16 @@ from homeassistant.components.bluetooth import (
     async_discovered_service_info,
 )
 from homeassistant.const import CONF_ADDRESS, CONF_DEVICE_CLASS
-from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig, SelectSelectorMode
-from .const import (
-    HASS_DOMAIN,
-    SaunaDeviceType,
+from homeassistant.helpers.selector import (
+    SelectSelector,
+    SelectSelectorConfig,
+    SelectSelectorMode,
 )
+
 from . import get_adapter_class
+from .const import HASS_DOMAIN, SaunaDeviceType
+
 _LOGGER = logging.getLogger(__name__)
-
-
 
 
 class ArtsaunaBLEConfigFlow(config_entries.ConfigFlow, domain=HASS_DOMAIN):

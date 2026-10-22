@@ -97,18 +97,17 @@ async def async_setup_entry(
 ) -> None:
     """Set up the sensor platform."""
     data: ArtsaunaBLEData = hass.data[HASS_DOMAIN][entry.entry_id]
-    if data and data.device:
-        if isinstance(data.device, KdyBLEAdapter):
-            entities = [
-                KdyBLESensor(data.coordinator, data.device, entry.title, description)
-                for description in KDY_SENSOR_DESCRIPTIONS
-            ]
-        else:
-            entities = [
-                ArtsaunaBLESensor(data.coordinator, data.device, entry.title, description)
-                for description in ARTSAUNA_SENSOR_DESCRIPTIONS
-            ]
-        async_add_entities(entities)
+    if isinstance(data.device, KdyBLEAdapter):
+        entities = [
+            KdyBLESensor(data.coordinator, data.device, entry.title, description)
+            for description in KDY_SENSOR_DESCRIPTIONS
+        ]
+    else:
+        entities = [
+            ArtsaunaBLESensor(data.coordinator, data.device, entry.title, description)
+            for description in ARTSAUNA_SENSOR_DESCRIPTIONS
+        ]
+    async_add_entities(entities)
 
 
 class ArtsaunaBLESensor(CoordinatorEntity[ArtsaunaBLECoordinator], SensorEntity):

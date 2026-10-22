@@ -100,18 +100,17 @@ async def async_setup_entry(
 ) -> None:
     """Set up the platform for ArtsaunaBLE."""
     data: ArtsaunaBLEData = hass.data[HASS_DOMAIN][entry.entry_id]
-    if data and data.device:
-        if isinstance(data.device, KdyBLEAdapter):
-            entities = [
-                KdyBLESwitch(data.coordinator, data.device, entry.title, description)
-                for description in KDY_SWITCH_ENTITY_DESCRIPTIONS
-            ]
-        else:
-            entities = [
-                ArtsaunaBLESwitch(data.coordinator, data.device, entry.title, description)
-                for description in ARTSAUNA_SWITCH_ENTITY_DESCRIPTIONS
-            ]
-        async_add_entities(entities)
+    if isinstance(data.device, KdyBLEAdapter):
+        entities = [
+            KdyBLESwitch(data.coordinator, data.device, entry.title, description)
+            for description in KDY_SWITCH_ENTITY_DESCRIPTIONS
+        ]
+    else:
+        entities = [
+            ArtsaunaBLESwitch(data.coordinator, data.device, entry.title, description)
+            for description in ARTSAUNA_SWITCH_ENTITY_DESCRIPTIONS
+        ]
+    async_add_entities(entities)
 
 
 class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity):

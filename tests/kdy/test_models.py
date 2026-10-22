@@ -1,4 +1,4 @@
-"""Tests for KDY status parsing — only real captured payloads."""
+"""Tests for KDY status parsing, frame validation, and command packets."""
 
 import pytest
 
@@ -7,7 +7,6 @@ from tests.kdy.import_helper import load_kdy_module
 load_kdy_module("const")  # models imports .const
 models = load_kdy_module("models")
 KdyState = models.KdyState
-InvalidStatusPacket = models.InvalidStatusPacket
 build_command_packet = models.build_command_packet
 
 # Real hardware capture from KDYSauna-10 (Artsauna_KDYSauna10_BLE-Protokoll.md):
@@ -30,15 +29,25 @@ def test_raw_payload_retained() -> None:
     assert state.raw.hex() == CAPTURED_STATUS.hex()
 
 
-def test_is_status_frame() -> None:
-    assert KdyState.is_status_frame(CAPTURED_STATUS) is True
-    assert KdyState.is_status_frame(b"\xaa\x00") is False
-    assert KdyState.is_status_frame(bytes(22)) is False
+@pytest.mark.parametrize("payload_type", [bytes, bytearray])
+def test_is_status_frame(payload_type) -> None:
+    assert KdyState.is_status_frame(payload_type(CAPTURED_STATUS)) is True
 
 
-def test_invalid_frame_raises() -> None:
-    with pytest.raises(InvalidStatusPacket):
-        KdyState.from_ble_status(b"\xff\xaa\x05ASOK3")
+@pytest.mark.parametrize("payload_type", [bytes, bytearray])
+@pytest.mark.parametrize(
+    "payload",
+    [
+        pytest.param(b"", id="empty"),
+        pytest.param(CAPTURED_STATUS[:-1], id="too-short"),
+        pytest.param(CAPTURED_STATUS + b"\xcc", id="too-long"),
+        pytest.param(b"\x00" + CAPTURED_STATUS[1:], id="wrong-start"),
+        pytest.param(CAPTURED_STATUS[:-1] + b"\x00", id="wrong-end"),
+        pytest.param(bytes(22), id="zero-filled"),
+    ],
+)
+def test_invalid_status_frame_is_rejected(payload, payload_type) -> None:
+    assert KdyState.is_status_frame(payload_type(payload)) is False
 
 
 def test_power_off_observed_values() -> None:
