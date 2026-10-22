@@ -24,6 +24,7 @@ import asyncio
 import logging
 import sys
 from collections.abc import Callable
+from contextlib import suppress
 from functools import cached_property
 
 from bleak.backends.device import BLEDevice
@@ -55,12 +56,18 @@ from .const import (
     CMD_VALUE_STEP_DOWN,
     CMD_VALUE_STEP_UP,
     CMD_VALUE_TOGGLE,
+    STATUS_PACKET_LENGTH,
+    STATUS_START,
 )
 from .models import KdyState, build_command_packet
 
 _LOGGER = logging.getLogger(__name__)
 BLEAK_BACKOFF_TIME = 0.25
 DEFAULT_ATTEMPTS = sys.maxsize
+
+
+class AdapterStoppedError(RuntimeError):
+    """An operation was rejected because the adapter has been stopped."""
 
 
 class KdyBLEAdapter:
@@ -71,11 +78,19 @@ class KdyBLEAdapter:
         self._advertisement_data: AdvertisementData | None = None
         self._state = KdyState()
         self._client: BleakClientWithServiceCache | None = None
+        self._notification_session: object | None = None
+        self._notification_buffers = {
+            CHARACTERISTIC_FFF1: bytearray(),
+            CHARACTERISTIC_FFF2: bytearray(),
+        }
         self._connect_lock = asyncio.Lock()
         self._operation_lock = asyncio.Lock()
         self._callbacks: list[Callable[[KdyState], None]] = []
         self._disconnected_callbacks: list[Callable[[], None]] = []
         self._expected_disconnect = False
+        self._stopped = False
+        self._ready_lock = asyncio.Lock()
+        self._reconnect_task: asyncio.Task[None] | None = None
 
     @cached_property
     def address(self) -> str:
@@ -129,15 +144,21 @@ class KdyBLEAdapter:
 
     async def initialise(self) -> None:
         """Connect and subscribe to notifications on the shared client."""
+        self._stopped = False
         await self._ensure_ready()
 
     async def _ensure_ready(self) -> None:
         """Ensure connected with notification subscriptions active."""
-        need_subscribe = not (self._client and self._client.is_connected)
-        await self._ensure_connected()
-        self._expected_disconnect = False
-        if need_subscribe:
-            await self._start_notifications()
+        async with self._ready_lock:
+            if self._stopped:
+                raise AdapterStoppedError(f"{self.name}: adapter is stopped")
+            need_subscribe = not (self._client and self._client.is_connected)
+            await self._ensure_connected()
+            if self._stopped:
+                raise AdapterStoppedError(f"{self.name}: adapter is stopped")
+            self._expected_disconnect = False
+            if need_subscribe:
+                await self._start_notifications()
 
     async def _start_notifications(self) -> None:
         """Subscribe to status notifications on the connected client."""
@@ -145,12 +166,25 @@ class KdyBLEAdapter:
             _LOGGER.debug("%s: Client is unexpectedly None", self.name)
             return
 
+        client = self._client
+        self._clear_notification_buffers()
+        session = object()
+        self._notification_session = session
+
+        def handle_notification(characteristic: object, data: bytearray) -> None:
+            # Queued callbacks can outlive a disconnect or a new subscription.
+            if (
+                self._notification_session is session
+                and not self._stopped
+                and self._client is client
+                and client.is_connected
+            ):
+                self._notification_handler(characteristic, data)
+
         _LOGGER.debug("%s: Subscribe to FFF2 status notifications", self.name)
-        await self._client.start_notify(CHARACTERISTIC_FFF2, self._notification_handler)
+        await client.start_notify(CHARACTERISTIC_FFF2, handle_notification)
         try:
-            await self._client.start_notify(
-                CHARACTERISTIC_FFF1, self._notification_handler
-            )
+            await client.start_notify(CHARACTERISTIC_FFF1, handle_notification)
             _LOGGER.debug("%s: Also subscribed to FFF1 notifications", self.name)
         except BleakError:
             _LOGGER.debug(
@@ -165,29 +199,47 @@ class KdyBLEAdapter:
         self._advertisement_data = advertisement_data
 
     def _notification_handler(self, characteristic: object, data: bytearray) -> None:
-        """Handle notification responses on the single connection."""
+        """Assemble status frames independently for each notification channel."""
         char_uuid = getattr(characteristic, "uuid", "UNKNOWN UUID")
         raw_hex = bytes(data).hex()
         _LOGGER.debug("%s: RAW notification %s: %s", self.name, char_uuid, raw_hex)
 
-        if KdyState.is_status_frame(data):
-            new_state = KdyState.from_ble_status(data)
+        buffer = self._notification_buffers.get(char_uuid.lower())
+        if buffer is None:
+            return
+        buffer.extend(data)
+
+        while buffer:
+            start = buffer.find(bytes((STATUS_START,)))
+            if start < 0:
+                buffer.clear()
+                break
+            del buffer[:start]
+            if len(buffer) < STATUS_PACKET_LENGTH:
+                break
+
+            frame = bytes(buffer[:STATUS_PACKET_LENGTH])
+            if not KdyState.is_status_frame(frame):
+                # Skip a false start and search for the next frame boundary.
+                del buffer[0]
+                continue
+            del buffer[:STATUS_PACKET_LENGTH]
+            new_state = KdyState.from_ble_status(frame)
 
             self._state = new_state
             _LOGGER.debug(
                 "%s: Decoded status: %s | RAW: %s",
                 self.name,
                 new_state.format_known_fields(),
-                raw_hex,
+                frame.hex(),
             )
             self._fire_callbacks()
-        else:
-            _LOGGER.debug(
-                "%s: Non-status or invalid %s payload: %s",
-                self.name,
-                char_uuid,
-                raw_hex,
-            )
+
+    def _clear_notification_buffers(self) -> None:
+        """Invalidate notification callbacks and discard connection fragments."""
+        self._notification_session = None
+        for buffer in self._notification_buffers.values():
+            buffer.clear()
 
     async def _ensure_connected(self) -> None:
         """Ensure connection to device is established."""
@@ -211,31 +263,52 @@ class KdyBLEAdapter:
                 ble_device_callback=lambda: self._ble_device,
             )
             _LOGGER.debug("%s: Connected", self.name)
+            self._clear_notification_buffers()
             self._client = client
 
     async def _reconnect(self) -> None:
         """Attempt a reconnect on the same adapter instance."""
+        if self._stopped:
+            return
         _LOGGER.debug("%s: ensuring connection", self.name)
         try:
             await self._ensure_ready()
         except BleakNotFoundError:
             _LOGGER.debug("%s: failed to ensure connection - backing off", self.name)
             await asyncio.sleep(BLEAK_BACKOFF_TIME)
-            asyncio.create_task(self._reconnect())
+            self._schedule_reconnect()
+        except AdapterStoppedError:
+            return
+
+    def _schedule_reconnect(self) -> None:
+        """Schedule a reconnect unless the adapter was stopped."""
+        if not self._stopped:
+            self._reconnect_task = asyncio.create_task(self._reconnect())
 
     def _disconnected(self, client: BleakClientWithServiceCache) -> None:
         """Disconnected callback."""
+        if self._client is not None and client is not self._client:
+            return
+        self._clear_notification_buffers()
         self._fire_disconnected_callbacks()
         if self._expected_disconnect:
             _LOGGER.debug("%s: Disconnected from device", self.name)
             return
         _LOGGER.warning("%s: Device unexpectedly disconnected", self.name)
-        asyncio.create_task(self._reconnect())
+        self._schedule_reconnect()
 
     async def stop(self) -> None:
         """Stop the KDY BLE connection."""
         _LOGGER.debug("%s: Stop", self.name)
-        await self._execute_disconnect()
+        self._stopped = True
+        self._clear_notification_buffers()
+        task = self._reconnect_task
+        if task and not task.done() and task is not asyncio.current_task():
+            task.cancel()
+            with suppress(asyncio.CancelledError):
+                await task
+        async with self._ready_lock:
+            await self._execute_disconnect()
 
     async def _execute_disconnect(self) -> None:
         """Execute disconnection."""
@@ -243,6 +316,7 @@ class KdyBLEAdapter:
             client = self._client
             self._expected_disconnect = True
             self._client = None
+            self._clear_notification_buffers()
             if client and client.is_connected:
                 for char in (CHARACTERISTIC_FFF2, CHARACTERISTIC_FFF1):
                     try:

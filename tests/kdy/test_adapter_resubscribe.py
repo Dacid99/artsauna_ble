@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import asyncio
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import ANY, AsyncMock, MagicMock, patch
 
 from tests.kdy.import_helper import load_kdy_module
 
@@ -55,7 +55,7 @@ def test_send_command_resubscribes_after_error_disconnect() -> None:
 
                 # Reconnected client must be subscribed for status updates
                 second_client.start_notify.assert_any_await(
-                    CHARACTERISTIC_FFF2, device._notification_handler
+                    CHARACTERISTIC_FFF2, ANY
                 )
                 second_client.write_gatt_char.assert_awaited()
 

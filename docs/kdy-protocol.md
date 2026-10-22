@@ -19,6 +19,14 @@ Device advertises as `KDYSauna*`. A single Bleak client/connection is shared for
 
 22 bytes, `AA … CC` framing.
 
+The adapter buffers notifications separately for FFF1 and FFF2, assembling
+fragmented frames and processing multiple frames in one notification. It skips
+invalid frame boundaries and retains at most 21 bytes of an incomplete frame
+per channel after processing. Buffers are cleared when the connection is lost,
+explicitly disconnected, or newly established.
+Notification callbacks are bound to their client and subscription session;
+late notifications from disconnected clients or previous sessions are ignored.
+
 
 | Byte(s) | Field               | Values                                     |
 | ------- | ------------------- | ------------------------------------------ |
