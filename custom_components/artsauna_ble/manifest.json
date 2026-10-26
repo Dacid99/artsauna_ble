@@ -18,5 +18,5 @@
   "issue_tracker": "https://github.com/dacid99/artsauna_ble/issues",
   "quality_scale": "bronze",
   "requirements": ["bluetooth-data-tools>=1.20.0"],
-  "version": "0.1.6"
+  "version": "1.0.0"
 }
