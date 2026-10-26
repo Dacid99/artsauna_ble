@@ -4,6 +4,9 @@
   "bluetooth": [
     {
       "local_name": "SAUNA*"
+    },
+    {
+      "local_name": "KDYSauna*"
     }
   ],
   "codeowners": ["@Dacid99", "@Samurai1202"],

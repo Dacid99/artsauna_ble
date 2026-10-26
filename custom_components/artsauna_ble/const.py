@@ -17,5 +17,10 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 """Constants for the Artsauna-BLE integration."""
+from enum import Enum
 
-DOMAIN = "artsauna_ble"
+class SaunaDeviceType(Enum):
+    ARTSAUNA = "artsauna"
+    KDY = "kdy"
+
+HASS_DOMAIN = "artsauna_ble"
