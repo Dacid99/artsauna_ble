@@ -5,41 +5,77 @@
 [![Downloads](https://img.shields.io/github/downloads/Dacid99/artsauna_ble/total)](https://github.com/Dacid99/artsauna_ble/releases)
 [![Translation status](https://hosted.weblate.org/widget/artsauna_ble/svg-badge.svg)](https://hosted.weblate.org/engage/artsauna_ble/)
 
-This free and open-source integration allows you to control your Artsauna Device via HomeAssistant.
+This free and open-source integration allows you to control Artsauna and KDY sauna devices via Home Assistant over Bluetooth Low Energy.
 
-It has been developed for and tested with an Artsauna Infrared Cabin Type Oslo.
+[Artsauna](https://www.artsauna.de/) is a German company that sells infrared cabins and saunas. Artsauna uses the same model designations (such as Infrared Cabin Type Oslo) across different underlying manufacturers. Both protocols in this integration were tested with an Artsauna Infrared Cabin Type Oslo: the original Artsauna/HiMaterial CS-128 path, and a newer cabin that uses a KDY controller.
+KDY is a Chinese sauna manufacturer.
 
-The controller used is marked as CS-128 and is most likely manufactured by china-based HiMaterial.
+## Supported devices
 
-Protocol details: [docs/artsauna-protocol.md](docs/artsauna-protocol.md)
+| Brand / device               | Discovery name | Status       | Protocol                                     |
+| ---------------------------- | -------------- | ------------ | -------------------------------------------- |
+| Artsauna (HiMaterial CS-128) | `SAUNA*`       | Full control | [docs/artsauna-protocol.md](docs/artsauna-protocol.md) |
+| KDY Sauna (newer Oslo cabin) | `KDYSauna*`    | Full control | [docs/kdy-protocol.md](docs/kdy-protocol.md) |
 
 ## Features
+
+### Artsauna
 
 You can control the Artsauna the same way the proprietary app would allow you to.
 
 All relevant datapoints the sauna BLE exposes are mapped to HA entities.
 
 Sensors:
+
 - Target and current temperature
 - Remaining time
 - Current radio frequency
 - RGB light color
 
 Switches:
+
 - Power and heating state
 - Audio input and radio search mode
 - Lights
 
 Buttons:
+
 - In- and decrease target temperature and time
 - Cycle RGB light color
 
 Numbers:
+
+- Set audio volume
+
+### KDY Sauna
+
+Sensors:
+
+- Power
+- Target and current temperature
+- Remaining time
+
+Switches:
+
+- Power
+- FM
+- Unit (°C/°F)
+
+Buttons:
+
+- In- and decrease target temperature and time
+- Inside and outside light
+- Cycle RGB light color
+- Toggle audio source
+
+Numbers:
+
 - Set audio volume
 
 ### Known quirks
 
-- None
+- KDY saunas typically allow only one BLE client at a time. Do not connect another app or tool while Home Assistant is connected.
+- None known for Artsauna beyond normal BLE range limits.
 
 *Please report if you find weird behaviour!*
 
@@ -49,7 +85,7 @@ Numbers:
 
 [![Add integration](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=artsauna_ble)
 
-or install manually on your server by running these commmands
+or install manually on your server by running these commands
 
 ```bash
 git clone https://github.com/dacid99/Artsauna-ble.git
@@ -64,14 +100,13 @@ You'd like to help with the translation of this project?
 
 You can do this by going to [Weblate](https://hosted.weblate.org/engage/artsauna_ble/) and add your language!
 
-[![Translation status](https://hosted.weblate.org/widget/artsauna_ble/multi-auto.
-svg)](https://hosted.weblate.org/engage/artsauna_ble/)
+[![Translation status](https://hosted.weblate.org/widget/artsauna_ble/multi-auto.svg)](https://hosted.weblate.org/engage/artsauna_ble/)
 
 ## Contributing
 
 If you encounter any issue with this integration please let us know via the issues section of this repo!
 
-We welcome pull requests, especially if they extend the number of Artsauna products that this integration can be used for!
+We welcome pull requests, especially if they extend the number of Artsauna or KDY products that this integration can be used for. For KDY protocol work, please include concrete captured packets before adding new field meanings or write commands.
 
 ## Thank-yous and References
 
@@ -81,7 +116,7 @@ We welcome pull requests, especially if they extend the number of Artsauna produ
 
 ## Disclaimer
 
-The developers of this integration are not affiliated with Artsauna or HiMaterial. 
-They have created the integration as open source in their spare time on the basis of publicly accessible information. 
-The use of the integration is at the user's own risk and responsibility. 
+The developers of this integration are not affiliated with Artsauna, HiMaterial, or KDY.
+They have created the integration as open source in their spare time on the basis of publicly accessible information.
+The use of the integration is at the user's own risk and responsibility.
 The developers are not liable for any damages arising from the use of the integration.

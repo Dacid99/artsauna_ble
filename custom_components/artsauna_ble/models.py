@@ -24,6 +24,7 @@ from dataclasses import dataclass
 
 from .artsauna_ble import ArtsaunaBLEAdapter
 from .coordinator import ArtsaunaBLECoordinator
+from .kdy_ble import KdyBLEAdapter
 
 
 @dataclass
@@ -31,5 +32,5 @@ class ArtsaunaBLEData:
     """Data for the artsauna ble integration."""
 
     title: str
-    device: ArtsaunaBLEAdapter
+    device: ArtsaunaBLEAdapter | KdyBLEAdapter
     coordinator: ArtsaunaBLECoordinator

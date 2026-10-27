@@ -38,6 +38,15 @@
       },
       "cycle_rgb": {
         "name": "Cycle RGB"
+      },
+      "external_light": {
+        "name": "Outside Light"
+      },
+      "internal_light": {
+        "name": "Inside Light"
+      },
+      "toggle_audio_source": {
+        "name": "Toggle BT/USB Source"
       }
     },
     "switch": {
@@ -83,6 +92,9 @@
       },
       "rgb_mode": {
         "name": "RGB Color Mode"
+      },
+      "power": {
+        "name": "Power"
       }
     }
   }
