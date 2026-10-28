@@ -13,8 +13,8 @@ KDY is a Chinese sauna manufacturer.
 ## Supported devices
 
 | Brand / device               | Discovery name | Status       | Protocol                                     |
-| ----------------------------- | -------------- | ------------ | -------------------------------------------- |
-| Artsauna (HiMaterial CS-128) | `SAUNA*`       | Full control | —                                            |
+| ---------------------------- | -------------- | ------------ | -------------------------------------------- |
+| Artsauna (HiMaterial CS-128) | `SAUNA*`       | Full control | [docs/artsauna-protocol.md](docs/artsauna-protocol.md) |
 | KDY Sauna (newer Oslo cabin) | `KDYSauna*`    | Full control | [docs/kdy-protocol.md](docs/kdy-protocol.md) |
 
 ## Features
