@@ -38,6 +38,15 @@
             },
             "cycle_rgb": {
                 "name": "Lappa värvid läbi"
+            },
+            "external_light": {
+                "name": "Väline valgus"
+            },
+            "internal_light": {
+                "name": "Sisene valgus"
+            },
+            "toggle_audio_source": {
+                "name": "Lülita BT/USB allikas sisse/välja"
             }
         },
         "switch": {
@@ -83,6 +92,9 @@
             },
             "rgb_mode": {
                 "name": "RGB värvirežiim"
+            },
+            "power": {
+                "name": "Toide"
             }
         }
     }
