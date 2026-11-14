@@ -46,7 +46,8 @@ class ArtsaunaStateMixin:
 
     @property
     def is_internal_light_on(self) -> bool:
-        return self._state.light > 2
+        # light value: 1 = external, 2 = internal, 3 = both
+        return self._state.light >= 2
 
     @property
     def is_rgb_on(self) -> bool:

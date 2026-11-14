@@ -167,7 +167,26 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
 
         self.async_write_ha_state()
 
-    async def async_turn_on(self, **kwargs: Any) -> None:
+    def _current_state(self) -> bool | None:
+        """Return the device state for this switch, None if not reliable."""
+        match self._key:
+            case "power":
+                return self._device.is_power_on
+            case "external_light":
+                return self._device.is_external_light_on
+            case "internal_light":
+                return self._device.is_internal_light_on
+            case "bt":
+                return self._device.is_bt_on
+            case "fm":
+                return self._device.is_fm_on
+            case "unit":
+                return self._device.is_unit_celsius
+            case _:
+                # heating state reported by the device is not reliable
+                return None
+
+    async def _send_toggle(self) -> bool:
         match self._key:
             case "power":
                 await self._device.send_toggle_power()
@@ -185,13 +204,25 @@ class ArtsaunaBLESwitch(CoordinatorEntity[ArtsaunaBLECoordinator], SwitchEntity)
                 await self._device.send_toggle_unit()
             case _:
                 _LOGGER.error("Wrong KEY for switch: %s", self._key)
-                return
+                return False
+        return True
+
+    async def _set_state(self, desired_on: bool) -> None:
+        """Send the toggle command only if the device is not already in the desired state."""
+        current = self._current_state()
+        if current is not None and current == desired_on:
+            return
+        if not await self._send_toggle():
+            return
         # manually switch the value for fluid ui
-        if self._key != "heating":  # heating data is flawd
-            self._attr_is_on = not self._attr_is_on
+        if self._key != "heating":  # heating data is flawed
+            self._attr_is_on = desired_on
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        await self._set_state(True)
 
     async def async_turn_off(self, **kwargs: Any) -> None:
-        await self.async_turn_on()
+        await self._set_state(False)
 
     @property
     def available(self) -> bool:
